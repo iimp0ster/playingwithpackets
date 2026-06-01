@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<h1>{{ page.title }}</h1>
+{% if page.description %}<p class="post-meta">{{ page.description }}</p>{% endif %}
+<div class="section-list">
+  {% if page.collection == "archive" %}
+    {% assign items = site.archive | sort: "date" | reverse %}
+  {% else %}
+    {% assign items = site.posts %}
+  {% endif %}
+  {% if items.size == 0 %}
+    <p style="color:var(--ink-faint);font-family:var(--font-crt)">No posts yet — check back soon.</p>
+  {% else %}
+    {% for item in items %}
+    <a class="section-post-row" href="{{ item.url | relative_url }}">
+      <span class="num">#{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
+      <span class="title">{{ item.title }}</span>
+      <span class="date">{{ item.date | date: "%Y.%m.%d" }}</span>
+    </a>
+    {% endfor %}
+  {% endif %}
+</div>

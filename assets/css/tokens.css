@@ -1,0 +1,35 @@
+:root {
+  /* Screen palette — warm Metal Slug tones */
+  --bg-deep:#140a0a; --bg-screen:#1c1010; --bg-panel:#2a1614; --bg-panel-hi:#3a201c; --bg-darker:#0e0606;
+  --ink:#f4e8d0; --ink-dim:#c8b598; --ink-faint:#8a6f5a;
+
+  /* Re-skinned "neon" accents → Metal Slug */
+  --neon-yellow:#ffd23a; --neon-pink:#e8352a; --neon-cyan:#ff8c1a; --neon-magenta:#d8488e;
+  --neon-green:#8ab43a; --neon-red:#c8201c; --neon-orange:#ff8c1a;
+
+  /* Game Boy shell */
+  --gb-shell:#c3b5a8; --gb-shell-dark:#9c907f; --gb-shell-hi:#d8ccbe;
+  --gb-screen-bezel:#3a3340; --gb-dpad:#2a2530; --gb-btn-purple:#6b3e8e;
+  --gb-btn-red:#c33a4c; --gb-led-red:#ff3a3a;
+
+  /* Metal Slug arcade chassis */
+  --ms-red:#c8201c; --ms-red-dark:#7a1010; --ms-red-deep:#4a0808; --ms-red-bright:#e8352a;
+  --ms-black:#160d0d; --ms-black-hi:#2a1614;
+  --ms-yellow:#ffd23a; --ms-yellow-dark:#c89510;
+  --ms-cream:#f4e8d0; --ms-white:#f0e8d8;
+
+  /* Ammo-crate metal (for future crate icon variant) */
+  --crate-outline:#15110a; --crate-metal:#7a7458; --crate-metal-hi:#a39a78;
+  --crate-metal-dk:#4e4a36; --crate-bolt:#2e2b1e; --crate-bolt-hi:#9a9270;
+
+  /* Weapon/section accent colors */
+  --w-hmg:#ffd23a;     /* H Blog */
+  --w-grenade:#4a9ec4; /* G About */
+  --w-archive:#6a8caf; /* A Archive */
+
+  /* Type */
+  --font-pixel:'Press Start 2P','Courier New',monospace;
+  --font-stencil:'Black Ops One','Impact',sans-serif;
+  --font-crt:'VT323','Courier New',monospace;
+  --font-mono:'JetBrains Mono','Courier New',monospace;
+}

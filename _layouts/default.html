@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include head.html %}
+</head>
+<body class="page">
+<header class="page-header">
+  <a href="{{ '/' | relative_url }}" class="back-home">◀ PLAYING WITH PACKETS</a>
+  {% if page.tags.size > 0 %}
+  <div class="page-tags">
+    {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+  </div>
+  {% endif %}
+</header>
+<main id="main-content" class="page-content">
+  {{ content }}
+</main>
+<footer class="page-footer">
+  <a href="{{ '/' | relative_url }}">◀ Arcade</a> ·
+  <a href="{{ '/blog/' | relative_url }}">Blog</a> ·
+  <a href="{{ '/about/' | relative_url }}">About</a> ·
+  <a href="{{ '/archive/' | relative_url }}">Archive</a> ·
+  <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+</footer>
+</body>
+</html>

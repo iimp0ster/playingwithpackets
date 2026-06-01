@@ -1,0 +1,46 @@
+---
+layout: null
+---
+{
+  "sections": [
+    {% for section in site.data.sections %}
+    {
+      "id": {{ section.id | jsonify }},
+      "label": {{ section.label | jsonify }},
+      "title": {{ section.title | jsonify }},
+      "sub": {{ section.sub | jsonify }},
+      "desc": {{ section.desc | jsonify }},
+      "color": {{ section.color | jsonify }},
+      "letter": {{ section.letter | jsonify }},
+      "glyph": {{ section.glyph | jsonify }},
+      "route": {{ section.route | jsonify }},
+      "external": {{ section.external }},
+      "meta": {{ section.meta | jsonify }},
+      {% if section.id == "blog" %}
+      "posts": [
+        {% for post in site.posts limit:10 %}
+        {
+          "title": {{ post.title | jsonify }},
+          "date": {{ post.date | date: "%Y.%m.%d" | jsonify }},
+          "url": {{ post.url | jsonify }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+      {% elsif section.id == "archive" %}
+      "posts": [
+        {% assign sorted_archive = site.archive | sort: "date" | reverse %}
+        {% for item in sorted_archive limit:10 %}
+        {
+          "title": {{ item.title | jsonify }},
+          "date": {{ item.date | date: "%Y.%m.%d" | jsonify }},
+          "url": {{ item.url | jsonify }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+      {% else %}
+      "posts": []
+      {% endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include head.html %}
+</head>
+<body class="auto">
+
+<button class="shell-toggle" id="shell-toggle">FLIP SHELL</button>
+
+{% include nav-fallback.html %}
+
+<div class="device">
+  {% include gameboy-shell.html %}
+  {% include arcade-shell.html %}
+</div>
+
+{% include screen-template.html %}
+
+<script src="{{ '/assets/js/arcade.js' | relative_url }}"></script>
+</body>
+</html>

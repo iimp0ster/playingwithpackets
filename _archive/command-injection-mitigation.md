@@ -2,6 +2,7 @@
 layout: archive
 title: "Command Injection Mitigation"
 date: 2018-12-02
+description: "Defensive controls for command injection — input validation, least privilege, and sandboxing."
 original_url: https://playingwithpackets.com/command-injection-mitigation/
 archived: true
 ---

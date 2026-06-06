@@ -5,14 +5,13 @@
 </head>
 <body class="auto">
 
-<button class="shell-toggle" id="shell-toggle">FLIP SHELL</button>
-
 {% include nav-fallback.html %}
 
 <div class="device">
   {% include gameboy-shell.html %}
-  {% include arcade-shell.html %}
 </div>
+
+<main id="cartridge-stage" hidden></main>
 
 {% include screen-template.html %}
 

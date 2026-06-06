@@ -1,0 +1,12 @@
+{% comment %}
+  Usage in posts:
+  {% include post-screenshot.html src="/assets/img/example.png" alt="Description" caption="Optional caption" %}
+{% endcomment %}
+<figure class="post-screenshot">
+  <div class="post-screenshot-frame">
+    <img src="{{ include.src | relative_url }}" alt="{{ include.alt | default: include.caption | escape }}" loading="lazy">
+  </div>
+  {% if include.caption %}
+  <figcaption>{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>

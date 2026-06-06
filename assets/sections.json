@@ -3,7 +3,8 @@ layout: null
 ---
 {
   "sections": [
-    {% for section in site.data.sections %}
+    {% assign sorted_sections = site.data.sections | sort: "order" %}
+    {% for section in sorted_sections %}
     {
       "id": {{ section.id | jsonify }},
       "label": {{ section.label | jsonify }},
@@ -13,6 +14,7 @@ layout: null
       "color": {{ section.color | jsonify }},
       "letter": {{ section.letter | jsonify }},
       "glyph": {{ section.glyph | jsonify }},
+      "pixel_art": {{ section.pixel_art | jsonify }},
       "route": {{ section.route | jsonify }},
       "external": {{ section.external }},
       "meta": {{ section.meta | jsonify }},

@@ -2,7 +2,10 @@
 layout: default
 ---
 <h1>{{ page.title }}</h1>
-{% if page.description %}<p class="post-meta">{{ page.description }}</p>{% endif %}
+{% if page.description %}<p class="section-intro">{{ page.description }}</p>{% endif %}
+{% if page.collection == "archive" %}
+<p class="archive-notice">Preserved transmissions from the original site. These posts are kept for reference — newer writing lives in <a href="{{ '/blog/' | relative_url }}">Blog</a>.</p>
+{% endif %}
 <div class="section-list">
   {% if page.collection == "archive" %}
     {% assign items = site.archive | sort: "date" | reverse %}
@@ -10,12 +13,16 @@ layout: default
     {% assign items = site.posts %}
   {% endif %}
   {% if items.size == 0 %}
-    <p style="color:var(--ink-faint);font-family:var(--font-crt)">No posts yet — check back soon.</p>
+    <p class="section-empty">No posts yet — check back soon.</p>
   {% else %}
     {% for item in items %}
     <a class="section-post-row" href="{{ item.url | relative_url }}">
       <span class="num">#{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
-      <span class="title">{{ item.title }}</span>
+      <span class="section-post-body">
+        <span class="title">{{ item.title }}</span>
+        {% assign summary = item.excerpt | default: item.description %}
+        {% if summary %}<span class="excerpt">{{ summary | strip_html | truncate: 120 }}</span>{% endif %}
+      </span>
       <span class="date">{{ item.date | date: "%Y.%m.%d" }}</span>
     </a>
     {% endfor %}

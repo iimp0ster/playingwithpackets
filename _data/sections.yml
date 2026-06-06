@@ -1,41 +1,50 @@
+# Source of truth for Game Boy cartridge / section selector.
+# Each entry maps to a real static URL. Order field controls game-select layout.
+# Optional PixelLab cartridge sticker art, if you want to add a simple concept mark later:
+#   pixel_art: /assets/img/pixel/cartridges/<section-id>.png
+# If pixel_art is omitted, the cartridge uses a clean color-only label.
+
 - id: blog
-  label: "Playing\nwith Packets"
-  title: HEAVY MACHINE GUN
-  sub: PLAYING WITH PACKETS
+  order: 1
+  label: "Blog"
+  title: PLAYING WITH PACKETS
+  sub: BLOG
   desc: "Rapid-fire detection writeups, adversary infra research, deception, and threat hunting."
   meta:
-    - [WEAPON, "[H] HMG"]
     - [TYPE, BLOG]
+    - [BY, TYLER BOHLMANN]
   color: "#ffd23a"
-  letter: H
-  glyph: HMG
+  letter: B
+  pixel_art: /assets/img/pixel/cartridges/blog.png
   route: /blog/
   external: false
 
-- id: about
-  label: "About\nPlayer 1"
-  title: SUPER GRENADE
-  sub: ABOUT PLAYER 1
-  desc: "Tyler Bohlmann. Detection engineer at Huntress. Coffee, whisky, jiu-jitsu, threat hunting."
-  meta:
-    - [WEAPON, "[G] GRENADE"]
-    - [ORG, HUNTRESS]
-  color: "#4a9ec4"
-  letter: G
-  glyph: GRENADE
-  route: /about/
-  external: false
-
 - id: archive
-  label: "Signal\nArchive"
-  title: SUPPLY CRATE
-  sub: SIGNAL ARCHIVE
+  order: 2
+  label: "Archive"
+  title: SIGNAL ARCHIVE
+  sub: ARCHIVE
   desc: "Old transmissions from the lab — early posts preserved from the original site."
   meta:
-    - [WEAPON, "[A] CRATE"]
     - [TYPE, ARCHIVE]
+    - [ERA, EARLY POSTS]
   color: "#6a8caf"
   letter: A
-  glyph: CRATE
+  pixel_art: /assets/img/pixel/cartridges/archive.png
   route: /archive/
+  external: false
+
+- id: about
+  order: 3
+  label: "About"
+  title: ABOUT
+  sub: PLAYER 1
+  desc: "Tyler Bohlmann. Detection engineer at Huntress. Coffee, whisky, jiu-jitsu, threat hunting."
+  meta:
+    - [ORG, HUNTRESS]
+    - [ROLE, DETECTION ENG]
+  color: "#4a9ec4"
+  letter: P
+  pixel_art: /assets/img/pixel/cartridges/about.png
+  route: /about/
   external: false

@@ -1,6 +1,6 @@
 /* Playing with Packets — arcade engine
-   Ported from design/prototype.html. Data-driven via /assets/sections.json.
-   FLIP SHELL is only enabled when the URL contains ?dev=1.
+   Boot: Game Boy shell → PRESS START → zoom out → full-page cartridge stage.
+   Data-driven via /assets/sections.json.
 */
 
 /* ============================================================
@@ -12,6 +12,11 @@ function darker(hex,pct){const c=hexToRgb(hex);const f=1-pct/100;return rgbToHex
 function lighter(hex,pct){const c=hexToRgb(hex);const f=pct/100;return rgbToHex(
   Math.min(255,Math.round(c.r+(255-c.r)*f)),Math.min(255,Math.round(c.g+(255-c.g)*f)),
   Math.min(255,Math.round(c.b+(255-c.b)*f)));}
+function escapeAttr(value) {
+  return String(value || '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[ch]);
+}
 
 /* ============================================================
    PIXEL ART RENDERER
@@ -24,104 +29,85 @@ function pixelArt(grid, palette, scale, offX, offY) {
       if (ch === '.' || ch === ' ') continue;
       const fill = palette[ch];
       if (!fill) continue;
-      rects += `<rect x="${offX + x*scale}" y="${offY + y*scale}" width="${scale}" height="${scale}" fill="${fill}"/>`;
+      rects += `<rect x="${offX + x * scale}" y="${offY + y * scale}" width="${scale}" height="${scale}" fill="${fill}"/>`;
     }
   }
   return rects;
 }
 
-/* ============================================================
-   WEAPON GLYPHS — 16×16, bold silhouettes
-   X=outline 1=color W=white/highlight 2=lighter accent
-   All kept in registry even if not currently in sections.yml,
-   so future crates can reference them without engine changes.
-   ============================================================ */
-const W_HMG = [
-  '................','................','................','......XXXXX.....',
-  '.....X11111X....', '.XXXX22222XXXX..','X111111111111X..','X1WWWWWWWWWW1X..',
-  'X1111111111XXX..','XXXXXX111XX.....', '.....X111X......','.....X111X......',
-  '....XX111XX.....','....X11111X.....','....XXXXXXX.....','................'
+/* Chunky Pokémon-style shell — identical grey plastic for every section.
+   L/l/D = label fill (section color). y/Y = gold slot contacts. No icons or text. */
+const CART_GRID = [
+  '....kkkkkkkkkkkkkkkkkkkk....',
+  '...kHHHHHHHHHHHHHHHHHHHHk...',
+  '..kkggggggggggggggggggkk....',
+  '..kggggggggggggggggggggk....',
+  '..kggggggggggggggggggggk....',
+  '..kggggssssssssssssggggk....',
+  '..kggsskkkkkkkkkkkkssggk....',
+  '..kggssYYYYYYYYYYYYssggk....',
+  '..kggssYyYyYyYyYyYyssggk....',
+  '..kggssYYYYYYYYYYYYssggk....',
+  '..kggsskkkkkkkkkkkkssggk....',
+  '..kggggssssssssssssggggk....',
+  '..kggggggggggggggggggggk....',
+  '..kggdggggggggggggggdgk.....',
+  '..kdkkkkkkkkkkkkkkkkkdk.....',
+  '..kdklllllllllllllllldk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdklLLLLLLLLLLLLLLLdk.....',
+  '..kdkDDDDDDDDDDDDDDDDdk.....',
+  '..kdkkkkkkkkkkkkkkkkkdk.....',
+  '..kggdggggggggggggggdgk.....',
+  '..kggggggggggggggggggggk....',
+  '..kggggttggggggggttggggk....',
+  '..kkdddggggggggggdddggkk....',
+  '...kkkkkkkkkkkkkkkkkkkk.....',
+  '....kkkkkkkkkkkkkkkkkk......',
 ];
-const W_ROCKET = [
-  '.............X..','............X1X.','...........X1WX.','..........X11X..',
-  '.........X11X...','....XXXXXX1X....','...X111111X.....','...X1WWWW1X.....',
-  '...X111111X.....','...XXXXXXXX.....','.....X11X.......','.....X11X.......',
-  '....XX11XX......','....X1111X......','....XXXXXX......','................'
-];
-const W_FLAME = [
-  '.......X........','......X1X.......','.....X1WX.......','....X1WW1X......',
-  '...X1WW2W1X.....','..X1WW222W1X....','..X1W22222W1X...','.X1W2222222W1X..',
-  '.X1W22WW22W1X...','..X1W2222W1X....','..XX1WWWW1XX....','...XX1111XX.....',
-  '....XXXXXX......','.....X11X.......','.....XXXX.......','................'
-];
-const W_CHASER = [
-  '..XX............','.X11X...........','.X1WX...XX......','.XX1X..X11X.....',
-  '..X1X..X1WX.....','..X1X..XX1X.....','..X1X...X1X.....','..X1X...X1X.....',
-  '..X1X...X1X.....','..X1X...X1X.....','.XX1XX.XX1XX....','.X111X.X111X....',
-  '.X1W1X.X1W1X....','.XXXXX.XXXXX....','................','................'
-];
-const W_SHOT = [
-  '................','................','....XXXXXXXXX...','...X111111111X..',
-  '..X11111111111X.','..X1WWWWWWWW11X.','..X11111111XXXX.','..XXXXXX111X....',
-  '......X111X.....','......X111X.....','.....XX111XX....','.....X11111X....',
-  '.....XXXXXXX....','................','................','................'
-];
-const W_GRENADE = [
-  '.......XX.......','......X11X......','.....X1XX1X.....','....XXXXXXXX....',
-  '...X11111111X...','..X1WW111111X...','.X1WW11111111X..','.X111111111111X.',
-  '.X111111111111X.','.X111111111111X.','..X11111111111X.','..X11111111111X.',
-  '...X1111111111X.','....XXXXXXXX....','................','................'
-];
-const W_CRATE = [
-  '................',
-  '....XXXXXXXX....',
-  '...X11111111X...',
-  '...X1WWWWWW1X...',
-  '...X11111111X...',
-  '...XXXXXXXXXX...',
-  '...X1X2222X1X...',
-  '...X1X2222X1X...',
-  '...XXXXXXXXXX...',
-  '...X11111111X...',
-  '...X1WWWWWW1X...',
-  '...X11111111X...',
-  '....XXXXXXXX....',
-  '................',
-  '................',
-  '................'
-];
-
-const GLYPHS = {
-  HMG: W_HMG, ROCKET: W_ROCKET, FLAME: W_FLAME,
-  CHASER: W_CHASER, SHOT: W_SHOT, GRENADE: W_GRENADE, CRATE: W_CRATE
-};
 
 /* ============================================================
-   WEAPON PICKUP CAPSULE RENDERER
+   GAME BOY CARTRIDGE RENDERER
+   Full PixelLab cartridge art per section when `pixel_art` is set;
+   otherwise a generated uniform grey SVG shell (fallback).
    ============================================================ */
-function weaponPickup(glyph, color, letter) {
-  const dk = darker(color, 38);
-  const lt = lighter(color, 28);
-  const outline = '#160a08';
-  const palette = { 'X': outline, '1': color, 'W':'#fff8e8', '2': lighter(color,45), '3': darker(color,18) };
-  const gScale = 1.6;
-  const gW = 16 * gScale;
-  const panelX = 14, panelY = 14, panelW = 32, panelH = 30;
-  const offX = panelX + (panelW - gW) / 2;
-  const offY = panelY + (panelH - gW) / 2;
+function gameBoyCartridge(section) {
+  /* Preferred: full PixelLab cartridge PNG (authentic GB shell + section colour + label emblem).
+     image-rendering:pixelated keeps the 128px art crisp when scaled up in the stage. */
+  if (section.pixel_art) {
+    return `<img class="pixel-cartridge-img" src="${escapeAttr(section.pixel_art)}" alt="" aria-hidden="true">`;
+  }
 
-  return `<svg viewBox="0 0 60 72" width="100%" height="100%">
-    <ellipse cx="30" cy="68" rx="19" ry="3" fill="rgba(0,0,0,.45)"/>
-    <rect x="9" y="5" width="42" height="60" rx="9" fill="${outline}"/>
-    <rect x="11" y="7" width="38" height="56" rx="7" fill="${color}"/>
-    <rect x="11" y="7" width="38" height="22" rx="7" fill="${lt}" opacity="0.55"/>
-    <rect x="14" y="9" width="30" height="3" rx="1.5" fill="#fff8e8" opacity="0.6"/>
-    <rect x="13" y="13" width="34" height="32" rx="3" fill="${dk}"/>
-    <rect x="13" y="13" width="34" height="32" rx="3" fill="none" stroke="${outline}" stroke-width="1"/>
-    <g shape-rendering="crispEdges">${pixelArt(glyph, palette, gScale, offX, offY)}</g>
-    <rect x="16" y="48" width="28" height="12" rx="2" fill="${outline}"/>
-    <rect x="17" y="49" width="26" height="10" rx="1" fill="${color}"/>
-    <text x="30" y="57.5" text-anchor="middle" font-family="'Press Start 2P',monospace" font-size="7" fill="#160a08">${letter}</text>
+  const color = section.color || '#7a7458';
+  const palette = {
+    k: '#18100c',
+    H: '#dbd3c8',
+    g: '#c2bab0',
+    d: '#9a9288',
+    s: '#0c0a14',
+    t: '#8a8278',
+    Y: '#e0c848',
+    y: '#c8a830',
+    L: color,
+    l: lighter(color, 32),
+    D: darker(color, 28),
+  };
+
+  const scale = 1;
+  const w = CART_GRID[0].length;
+  const h = CART_GRID.length;
+
+  return `<svg class="pixel-cartridge-svg" viewBox="0 0 ${w} ${h + 2}" aria-hidden="true" shape-rendering="crispEdges">
+    ${pixelArt(CART_GRID, palette, scale, 0, 0)}
+    <rect x="2" y="${h}" width="${w - 4}" height="1" fill="rgba(0,0,0,.35)"/>
   </svg>`;
 }
 
@@ -129,202 +115,219 @@ function weaponPickup(glyph, color, letter) {
    ENGINE STATE
    ============================================================ */
 let sections = [];
-let view = 'boot', selected = 0, cols = 2, activeShell = null;
-
-function isGbShell() {
-  if (document.body.classList.contains('force-gb')) return true;
-  if (document.body.classList.contains('force-arcade')) return false;
-  return window.matchMedia('(max-width: 719px)').matches;
-}
-
+let view = 'boot';
+let stageIdx = 0;
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
 /* ============================================================
    SHELL MOUNTING
    ============================================================ */
 function mountScreen() {
-  const wantsGb = isGbShell();
-  const wants = wantsGb ? 'gb' : 'arcade';
-  if (wants === activeShell) return;
-  activeShell = wants;
-  const target = wantsGb ? document.getElementById('gb-screen') : document.getElementById('cab-screen');
-  document.getElementById('gb-screen').innerHTML = '';
-  document.getElementById('cab-screen').innerHTML = '';
+  const target = document.getElementById('gb-screen');
+  if (!target) return;
+  target.innerHTML = '';
   const tpl = document.getElementById('screen-template').content.cloneNode(true);
   target.appendChild(tpl);
-  target.querySelector('.back-btn').addEventListener('click', goBack);
-  if (view === 'boot') runBoot();
-  else if (view === 'menu') { showView('menu'); renderGrid(); renderPreview(); }
-  else { showView('detail'); renderDetail(sections[selected]); }
+  runBoot();
 }
 
 function $(sel) {
-  const root = activeShell === 'gb' ? document.getElementById('gb-screen') : document.getElementById('cab-screen');
-  return root ? root.querySelector(sel) : null;
-}
-function $$(sel) {
-  const root = activeShell === 'gb' ? document.getElementById('gb-screen') : document.getElementById('cab-screen');
-  return root ? root.querySelectorAll(sel) : [];
+  return document.getElementById('gb-screen')?.querySelector(sel) || null;
 }
 
 /* ============================================================
-   BOOT SEQUENCE
+   BOOT SEQUENCE — authentic Game Boy startup feel
    ============================================================ */
-const bootLines = [
-  '[<span class="ok">OK</span>] SYSTEM POWER ON',
-  '[<span class="ok">OK</span>] LOADING DETECTION ROM v6.1',
-  '[<span class="ok">OK</span>] ARMORY INITIALIZED',
-  '[<span class="ok">OK</span>] MISSION READY'
-];
-
 function runBoot() {
-  const msgs = $('.boot-msgs'); const fill = $('.loading-fill');
-  if (!msgs || !fill) return;
-  msgs.innerHTML = bootLines.map(l => `<div class="boot-msg">${l}</div>`).join('');
-  const lines = msgs.querySelectorAll('.boot-msg');
-  let i = 0;
-  const li = setInterval(() => { if (i >= lines.length) { clearInterval(li); return; } lines[i].classList.add('shown'); i++; }, 260);
-  let pct = 0;
-  const fi = setInterval(() => { pct += 3; if (pct >= 100) { pct = 100; clearInterval(fi); } fill.style.width = pct + '%'; }, 50);
-  setTimeout(() => { const ps = $('.press-start'); if (ps) ps.classList.add('shown'); }, 1500);
-}
+  const msgs = $('.boot-msgs');
+  if (!msgs) return;
 
-/* ============================================================
-   MENU — grid + preview
-   ============================================================ */
-function renderGrid() {
-  const grid = $('.cart-grid'); if (!grid) return;
-  grid.innerHTML = sections.map((c, i) => `
-    <div class="cart ${i === selected ? 'selected' : ''}" data-idx="${i}">
-      <div class="cart-art">${weaponPickup(GLYPHS[c.glyph] || W_HMG, c.color, c.letter)}</div>
-      <div class="cart-label">${c.label.replace(/\n/g, '<br>')}</div>
-    </div>`).join('');
-  grid.querySelectorAll('.cart').forEach(el => {
-    el.addEventListener('click', () => {
-      const idx = parseInt(el.dataset.idx, 10);
-      if (idx === selected) loadCartridge();
-      else { selected = idx; renderGrid(); renderPreview(); }
-    });
-  });
-}
+  const reduced = REDUCED_MOTION.matches;
 
-function renderPreview() {
-  const c = sections[selected];
-  if (!c) return;
-  const t = $('.preview-title');
-  if (t) t.innerHTML = c.title + '<br><span style="font-size:.55rem;color:var(--ink-dim)">' + c.sub + '</span>';
-  const d = $('.preview-desc'); if (d) d.textContent = c.desc;
-  const m = $('.preview-meta');
-  if (m) m.innerHTML = (c.meta || []).map(([k,v]) => `<div>${k}: <b>${v}</b></div>`).join('');
-}
+  msgs.innerHTML = `
+    <div class="gb-boot-stack">
+      <div class="gb-boot-logo"><span class="gb-boot-word">PLAYING</span><span class="gb-boot-word">WITH</span><span class="gb-boot-word">PACKETS</span></div>
+      <div class="gb-boot-tagline">DETECTION ENGINE</div>
+      <div class="gb-boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  `;
 
-function recalcCols() { const grid = $('.cart-grid'); if (!grid) return; cols = grid.clientWidth >= 460 ? 3 : 2; }
+  const stack = msgs.querySelector('.gb-boot-stack');
+  const logo = msgs.querySelector('.gb-boot-logo');
+  const tagline = msgs.querySelector('.gb-boot-tagline');
+  const dots = msgs.querySelector('.gb-boot-dots');
 
-function move(dir) {
-  if (view !== 'menu') return;
-  recalcCols(); const n = sections.length; let next = selected;
-  if (dir === 'left')  next = (selected % cols === 0) ? selected : selected - 1;
-  if (dir === 'right') next = ((selected + 1) % cols === 0 || selected + 1 >= n) ? selected : selected + 1;
-  if (dir === 'up')    next = (selected - cols < 0) ? selected : selected - cols;
-  if (dir === 'down')  next = (selected + cols >= n) ? selected : selected + cols;
-  if (next !== selected) { selected = next; renderGrid(); renderPreview(); }
-}
-
-/* ============================================================
-   LOAD CARTRIDGE — routing logic
-   ============================================================ */
-function loadCartridge() {
-  if (view !== 'menu') return;
-  const c = sections[selected];
-  if (!c) return;
-
-  if (c.external) {
-    window.open(c.route, '_blank', 'noopener');
+  if (reduced) {
+    stack?.classList.add('ready');
+    logo?.classList.add('shown');
+    tagline?.classList.add('shown');
+    dots?.classList.add('shown');
+    showPressStart(400);
     return;
   }
 
-  if (c.id === 'about') {
-    window.location.href = c.route;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    stack?.classList.add('power-on');
+    setTimeout(() => logo?.classList.add('shown'), 320);
+    setTimeout(() => tagline?.classList.add('shown'), 720);
+    setTimeout(() => dots?.classList.add('shown'), 1080);
+    showPressStart(1500);
+  }));
+}
+
+function showPressStart(delay) {
+  setTimeout(() => {
+    const ps = $('.press-start');
+    if (ps) ps.classList.add('shown');
+  }, delay);
+}
+
+/* ============================================================
+   START — zoom transition into full-page cartridge stage
+   ============================================================ */
+function startGame() {
+  if (view !== 'boot') return;
+  view = 'transition';
+
+  const reduced = REDUCED_MOTION.matches;
+  const device = document.querySelector('.device');
+  const stage = document.getElementById('cartridge-stage');
+
+  renderCartridgeStage(stage);
+
+  if (reduced) {
+    device.hidden = true;
+    stage.hidden = false;
+    stage.classList.add('visible');
+    view = 'stage';
+    focusStageCart(0);
     return;
   }
 
-  // blog / archive: show in-screen post list with real links
-  flash();
-  setTimeout(() => { showView('detail'); renderDetail(c); }, 180);
-}
+  document.body.classList.add('boot-zooming');
 
-function flash() { const f = $('.flash'); if (!f) return; f.classList.remove('fire'); void f.offsetWidth; f.classList.add('fire'); }
+  setTimeout(() => {
+    stage.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.add('visible')));
+  }, 280);
+
+  setTimeout(() => {
+    device.hidden = true;
+    view = 'stage';
+    focusStageCart(0);
+  }, 620);
+}
 
 /* ============================================================
-   DETAIL VIEW — real post links
+   CARTRIDGE STAGE — full-page section selector
    ============================================================ */
-function renderDetail(c) {
-  const t = $('.detail-title'); if (t) t.textContent = c.sub;
-  const b = $('.detail-body'); if (!b) return;
-
-  const posts = c.posts || [];
-  let html = `<h3>Recent Transmissions</h3>`;
-
-  if (posts.length > 0) {
-    html += posts.map((p, i) =>
-      `<a class="post-row" href="${p.url}">
-        <span class="num">#${String(posts.length - i).padStart(2,'0')}</span>
-        <span class="title">${p.title}</span>
-        <span class="date">${p.date}</span>
-      </a>`
-    ).join('');
-    html += `<a class="detail-open-all" href="${c.route}">OPEN ${c.route} →</a>`;
-  } else {
-    html += `<p style="color:var(--ink-faint);font-family:var(--font-crt)">No transmissions yet.</p>`;
-    html += `<a class="detail-open-all" href="${c.route}">OPEN ${c.route} →</a>`;
-  }
-
-  b.innerHTML = html;
+function sectionCount(section) {
+  if (Array.isArray(section.posts)) return section.posts.length;
+  return 0;
 }
 
-function showView(name) { $$('.view').forEach(v => v.classList.remove('active')); const v = $('#view-' + name); if (v) v.classList.add('active'); view = name; }
-function startGame() { if (view !== 'boot') return; showView('menu'); renderGrid(); renderPreview(); }
-function goBack() { if (view === 'detail') { flash(); setTimeout(() => { showView('menu'); renderGrid(); renderPreview(); }, 100); } }
+function renderCartridgeStage(stage) {
+  const totalGames = sections.length;
+  const cards = sections.map((s, i) => {
+    const target = s.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const count = sectionCount(s);
+    const countLabel = count ? `${count} SAVE${count === 1 ? '' : 'S'}` : 'READY';
+    return `<a class="stage-cart" href="${s.route}"${target} data-idx="${i}" tabindex="0" aria-label="${s.label}: ${s.desc || ''}">
+      <div class="stage-cart-art">${gameBoyCartridge(s)}</div>
+      <div class="stage-cart-name">${s.label.replace(/\n/g, '<br>')}</div>
+      <div class="stage-cart-meta">${countLabel}</div>
+      <div class="stage-cart-desc">${s.desc || ''}</div>
+    </a>`;
+  }).join('');
 
-function handleAction(action) {
-  if (action === 'select') { if (view === 'boot') startGame(); else if (view === 'menu') loadCartridge(); }
-  if (action === 'back')   { if (view === 'detail') goBack(); }
+  stage.innerHTML = `
+    <div class="stage-shell">
+      <div class="stage-header">
+        <span class="stage-title">SELECT GAME</span>
+        <span class="stage-hud"><span class="stage-hud-label">GAMES</span> <span class="stage-hud-val">${String(totalGames).padStart(2, '0')}</span></span>
+      </div>
+      <div class="stage-grid">${cards}</div>
+      <div class="stage-footer">
+        <span class="stage-hint">◀ ▶ MOVE</span>
+        <span class="stage-hint stage-hint-select">A / START SELECT</span>
+      </div>
+    </div>
+  `;
+}
+
+function focusStageCart(idx) {
+  const carts = document.querySelectorAll('.stage-cart');
+  if (!carts.length) return;
+  stageIdx = Math.max(0, Math.min(idx, carts.length - 1));
+  carts.forEach((c, i) => c.classList.toggle('focused', i === stageIdx));
+  carts[stageIdx]?.focus();
+}
+
+function stageColCount() {
+  const grid = document.querySelector('.stage-grid');
+  const first = document.querySelector('.stage-cart');
+  if (!grid || !first) return 2;
+  return Math.max(1, Math.round(grid.clientWidth / first.offsetWidth));
+}
+
+function moveStage(dir) {
+  if (view !== 'stage') return;
+  const carts = document.querySelectorAll('.stage-cart');
+  const n = carts.length;
+  if (!n) return;
+  const cols = stageColCount();
+  let next = stageIdx;
+
+  if (dir === 'right') next = Math.min(stageIdx + 1, n - 1);
+  if (dir === 'left') next = Math.max(stageIdx - 1, 0);
+  if (dir === 'down') next = Math.min(stageIdx + cols, n - 1);
+  if (dir === 'up') next = Math.max(stageIdx - cols, 0);
+
+  if (next !== stageIdx) focusStageCart(next);
+}
+
+function selectStageCart() {
+  if (view !== 'stage') return;
+  document.querySelectorAll('.stage-cart')[stageIdx]?.click();
 }
 
 /* ============================================================
    INPUT — keyboard + on-screen controls
    ============================================================ */
 document.addEventListener('keydown', (e) => {
-  if (view === 'boot') { e.preventDefault(); startGame(); return; }
-  if (view === 'menu') {
-    if (e.key === 'ArrowUp')    { e.preventDefault(); move('up'); }
-    if (e.key === 'ArrowDown')  { e.preventDefault(); move('down'); }
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); move('left'); }
-    if (e.key === 'ArrowRight') { e.preventDefault(); move('right'); }
-    if (e.key === 'Enter' || e.key.toLowerCase() === 'z') { e.preventDefault(); loadCartridge(); }
+  if (view === 'boot') {
+    if (['Enter', ' ', 'z', 'Z', 'x', 'X'].includes(e.key)) {
+      e.preventDefault();
+      startGame();
+    }
+    return;
   }
-  if (view === 'detail') {
-    if (e.key === 'Escape' || e.key.toLowerCase() === 'x') { e.preventDefault(); goBack(); }
+
+  if (view === 'stage') {
+    if (e.key === 'ArrowRight') { e.preventDefault(); moveStage('right'); return; }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); moveStage('left'); return; }
+    if (e.key === 'ArrowDown')  { e.preventDefault(); moveStage('down'); return; }
+    if (e.key === 'ArrowUp')    { e.preventDefault(); moveStage('up'); return; }
+    if (e.key === 'Enter' || e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      selectStageCart();
+    }
   }
 });
 
-document.querySelectorAll('[data-dir]').forEach(b => { b.addEventListener('click', (e) => { e.preventDefault(); move(b.dataset.dir); }); });
-document.querySelectorAll('[data-action]').forEach(b => { b.addEventListener('click', (e) => { e.preventDefault(); handleAction(b.dataset.action); }); });
-
-/* ============================================================
-   FLIP SHELL — dev mode only (?dev=1)
-   ============================================================ */
-const toggle = document.getElementById('shell-toggle');
-if (new URLSearchParams(window.location.search).get('dev') === '1') {
-  toggle.classList.add('dev-visible');
-  toggle.addEventListener('click', () => {
-    const body = document.body;
-    const current = body.classList.contains('force-gb') ? 'gb'
-      : body.classList.contains('force-arcade') ? 'arcade'
-      : (isGbShell() ? 'gb' : 'arcade');
-    body.classList.remove('auto', 'force-gb', 'force-arcade');
-    body.classList.add(current === 'gb' ? 'force-arcade' : 'force-gb');
-    activeShell = null; mountScreen();
+document.querySelectorAll('[data-action]').forEach(b => {
+  b.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (b.dataset.action === 'select' && view === 'boot') startGame();
+    if (b.dataset.action === 'select' && view === 'stage') selectStageCart();
   });
-}
+});
+
+document.querySelectorAll('[data-dir]').forEach(b => {
+  b.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (view === 'stage') moveStage(b.dataset.dir);
+  });
+});
 
 /* ============================================================
    INIT — fetch sections.json then start
@@ -339,7 +342,6 @@ async function init() {
     console.warn('Could not load sections.json:', e);
   }
   mountScreen();
-  window.addEventListener('resize', () => { mountScreen(); recalcCols(); });
 }
 
 init();

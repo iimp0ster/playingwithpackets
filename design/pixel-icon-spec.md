@@ -1,0 +1,92 @@
+# Pixel Icon Spec — Playing with Packets
+
+Working design brief for the site's original pixel art. Turnkey for PixelLab generation:
+each entry below is a one-line prompt seed + target size + destination path. This doc lives in
+`design/` (excluded from the Jekyll build). The published index of finished icons goes in
+`CONTENT.md` once they exist.
+
+Status: **cartridges DONE** — built as full PixelLab GB-cartridge PNGs (not the label-sticker
+approach in §2, which was superseded per user direction). `gameBoyCartridge()` renders
+`section.pixel_art` as the whole cartridge `<img>`, SVG body as fallback. **Concept-icon set (§3)
+in progress.**
+
+---
+
+## 1. Global style system (keep every asset cohesive)
+
+These rules are what make the set read as *one family* and become recognizable — the point of
+"original to the site, referenced by others."
+
+- **Canvas:** concept icons `32×32` native (export larger only if detail demands, in 16px steps).
+  Cartridge stickers `32×24` (fills the wider label window). Boot mark `96×64`.
+- **Palette:** pull from `assets/css/tokens.css`. Max **3–4 colors per icon** + transparent bg.
+  Base ink `--gbc-lcd #8ab43a` / bright `--gbc-lcd-bright #b6df5a` on transparent; use one accent
+  from the Metal Slug set (`--neon-yellow #ffd23a`, `--neon-pink #e8352a`, `--neon-cyan #ff8c1a`)
+  only to mark the "attacker"/"alert" element. Outline `--crate-outline #15110a`.
+- **Form language:** chunky 1–2px outline, flat fill, single light source top-left, no anti-alias,
+  no gradients. Readable as a silhouette at 16px. **Less is more** — one idea per icon (CLAUDE.md).
+- **Rendering:** PNG only (never JPEG). Always displayed with `image-rendering:pixelated`.
+- **Naming:** `assets/img/pixel/concepts/<concept>.png`, `assets/img/pixel/cartridges/<id>.png`.
+- **Signature motif:** a recurring **green "signal" pixel** (single bright `--gbc-lcd-bright` dot)
+  hidden in each icon — a subtle through-line that ties the set together and is "spot the packet"
+  for regulars. Optional but recommended as the brand thread.
+
+---
+
+## 2. Cartridge stickers (3 — the launch sections)
+
+Small concept mark centered in the uniform gray cartridge's label window. Wire each via
+`pixel_art:` in `_data/sections.yml`. Keep them simple — the cartridge body already carries the
+retro weight; the sticker is a glance-level identifier.
+
+| id | path | color anchor | brief |
+|----|------|--------------|-------|
+| blog | `/assets/img/pixel/cartridges/blog.png` | `#ffd23a` yellow | A pixel "transmission" mark — a small CRT/monitor or signal-burst with a blinking cursor. "Rapid-fire writeups." |
+| archive | `/assets/img/pixel/cartridges/archive.png` | `#6a8caf` blue | A floppy disk or stacked tape reels — "old transmissions preserved." Slightly faded palette. |
+| about | `/assets/img/pixel/cartridges/about.png` | `#4a9ec4` cyan | "Player 1" — a tiny pixel avatar / 1-up head, or a coffee cup + gi belt nod (jiu-jitsu). Personal mark. |
+
+After generation: add the `pixel_art:` line per section, run `jekyll build`, screenshot the
+cartridge select at 375×812 and 1440×900, confirm the sticker sits crisp inside the label and the
+color-only fallback still works if a path is removed.
+
+---
+
+## 3. Detection-engineering concept-icon set (the signature library)
+
+Reusable lead-in art for posts (`{% include post-pixel-art.html %}`). Grounded in the operator's
+domain (invariant-anchored detection, AiTM, IOK rules, OSINT→JSON→detection pipeline). The
+**chokepoint funnel is the flagship mark** — it ties to the Detection Chokepoints project and is
+the most "ownable" image.
+
+| concept | file | one-line visual brief |
+|---------|------|------------------------|
+| chokepoint ★ | `chokepoint.png` | Many arrows from the top converge through one narrow gate/funnel to a single point. The flagship. |
+| attack-chain | `attack-chain.png` | 3–4 linked chain segments left→right; the middle link is the bright accent (the one you break). |
+| invariant / anchor | `invariant.png` | A heavy anchor or keystone — "the step the attacker can't avoid." Solid, immovable. |
+| telemetry | `telemetry.png` | A stacked log/ledger emitting 3 ascending signal blips, or a small radar sweep. |
+| ioc-vs-behavior | `ioc-behavior.png` | Split: a fingerprint (IOC, dim) vs a footprint/motion trail (behavior, bright). Behavior wins. |
+| aitm-proxy | `aitm-proxy.png` | Two endpoints with a malicious relay box between them passing a stolen token/cookie. |
+| threat-hunt | `threat-hunt.png` | A magnifier (or crosshair) over a grid where one cell is the accent — finding the anomaly. |
+| coverage-gap | `coverage-gap.png` | A shield/grid with one missing segment glowing the alert accent — the gap. |
+| sigma-rule | `sigma-rule.png` | A small rule card / scroll stamped with a Σ — detection-as-code. |
+| intel-pipeline | `intel-pipeline.png` | Funnel → `{ }` braces → shield: OSINT collapses to structured JSON to a detection. |
+
+★ = flagship. Optional later: `deception` (honeypot), `mitre-technique` (ATT&CK matrix cell),
+`lolbin` (a trusted binary with a small horn).
+
+### Usage pattern (CLAUDE.md flow)
+concept pixel art → short explanation → real screenshot/evidence → caption on what to notice.
+```liquid
+{% include post-pixel-art.html src="/assets/img/pixel/concepts/chokepoint.png" alt="Attack paths converge into one detection point" caption="Every variant funnels through the same unavoidable step." %}
+```
+
+---
+
+## 4. Generation + wiring workflow (once PixelLab is connected)
+
+1. Generate per the briefs above, iterating for set cohesion (same outline weight, palette, light).
+2. Export to the paths listed; keep native sizes small.
+3. Cartridges: add `pixel_art:` to `_data/sections.yml` → `jekyll build` → visual-verify both breakpoints.
+4. Concepts: drop into a post via the include; verify in-context.
+5. Add the finished set to `CONTENT.md` as the published index (filename + one-line meaning) so the
+   icons are reusable and citable — the documentation is what lets others reference them.

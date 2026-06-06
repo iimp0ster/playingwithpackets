@@ -1,3 +1,9 @@
+@font-face {
+  font-family:'Metal Slug Latino';
+  src:url('../fonts/metal-slug-latino.ttf') format('truetype');
+  font-weight:normal; font-style:normal; font-display:swap;
+}
+
 :root {
   /* Screen palette — warm Metal Slug tones */
   --bg-deep:#140a0a; --bg-screen:#1c1010; --bg-panel:#2a1614; --bg-panel-hi:#3a201c; --bg-darker:#0e0606;
@@ -12,11 +18,13 @@
   --gb-screen-bezel:#3a3340; --gb-dpad:#2a2530; --gb-btn-purple:#6b3e8e;
   --gb-btn-red:#c33a4c; --gb-led-red:#ff3a3a;
 
-  /* Metal Slug arcade chassis */
-  --ms-red:#c8201c; --ms-red-dark:#7a1010; --ms-red-deep:#4a0808; --ms-red-bright:#e8352a;
-  --ms-black:#160d0d; --ms-black-hi:#2a1614;
+  /* Metal Slug arcade chassis — matched to real cabinet photo */
+  --ms-red:#AA1010; --ms-red-dark:#6E0A0A; --ms-red-deep:#3E0505; --ms-red-bright:#CC1515;
+  --ms-black:#0E0808; --ms-black-hi:#1E0E0E;
   --ms-yellow:#ffd23a; --ms-yellow-dark:#c89510;
   --ms-cream:#f4e8d0; --ms-white:#f0e8d8;
+  /* Flame body panel colors */
+  --ms-flame:#D4580A; --ms-flame-hi:#FF8C1A; --ms-flame-dk:#7A2A04;
 
   /* Ammo-crate metal (for future crate icon variant) */
   --crate-outline:#15110a; --crate-metal:#7a7458; --crate-metal-hi:#a39a78;
@@ -27,9 +35,24 @@
   --w-grenade:#4a9ec4; /* G About */
   --w-archive:#6a8caf; /* A Archive */
 
+  /* Game Boy Color content-page palette */
+  --gbc-page-bg:#0b1208;
+  --gbc-page-panel:#111a0e;
+  --gbc-page-panel-hi:#182414;
+  --gbc-page-border:#35551e;
+  --gbc-lcd:#8ab43a;
+  --gbc-lcd-bright:#b6df5a;
+  --gbc-lcd-dim:#587a2c;
+  --gbc-purple:#6b3e8e;
+  --gbc-purple-dim:#3a2a4a;
+
+  /* Classic DMG green (boot screen + pixel-art frames) */
+  --gbc-dmg:#9bbc0f; --gbc-dmg-mid:#306230; --gbc-dmg-dark:#0f380f;
+
   /* Type */
   --font-pixel:'Press Start 2P','Courier New',monospace;
   --font-stencil:'Black Ops One','Impact',sans-serif;
   --font-crt:'VT323','Courier New',monospace;
   --font-mono:'JetBrains Mono','Courier New',monospace;
+  --font-metalslug:'Metal Slug Latino','Black Ops One','Impact',sans-serif;
 }

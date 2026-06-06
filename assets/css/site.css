@@ -422,6 +422,7 @@ body.page {
   overflow:auto;
   display:flex;
   flex-direction:column;
+  align-items:stretch; /* override base body's align-items:center, which sized .page-content to content width and overflowed mobile */
   min-height:100vh;
   user-select:auto;
 }
@@ -437,11 +438,11 @@ body.page {
 }
 .back-home:hover { color:var(--gbc-lcd-bright); }
 .page-content {
-  max-width:760px; margin:40px auto; padding:0 24px 60px;
+  width:100%; max-width:760px; margin:40px auto; padding:0 24px 60px;
   line-height:1.7; font-size:.875rem;
   flex:1;
 }
-.page-content h1 { font-family:var(--font-pixel); color:var(--gbc-lcd-bright); font-size:1.15rem; margin:0 0 24px; line-height:1.7; letter-spacing:.01em; text-shadow:0 0 14px rgba(182,223,90,.3); }
+.page-content h1 { font-family:var(--font-pixel); color:var(--gbc-lcd-bright); font-size:clamp(.8rem, 3.2vw, 1.15rem); margin:0 0 24px; line-height:1.7; letter-spacing:.01em; text-shadow:0 0 14px rgba(182,223,90,.3); overflow-wrap:break-word; }
 .page-content h2 { font-family:var(--font-crt); color:var(--gbc-lcd-bright); font-size:1.65rem; margin:40px 0 12px; line-height:1.25; letter-spacing:.04em; }
 .page-content h3 { font-family:var(--font-crt); color:var(--gbc-lcd); font-size:1.3rem; margin:28px 0 10px; line-height:1.3; letter-spacing:.03em; }
 .page-content p { margin-bottom:16px; }

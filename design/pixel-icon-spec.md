@@ -17,6 +17,13 @@ in progress.**
 These rules are what make the set read as *one family* and become recognizable — the point of
 "original to the site, referenced by others."
 
+- **House-style anchor (match the cartridges):** every icon's *rendering* should match the section
+  cartridges in `assets/img/pixel/cartridges/` — **bold single-colour black outline**, simple
+  **two-step cel shading** (flat fill + one shadow + one highlight), **high contrast**, **crisp
+  chunky pixels**, clean readable forms. Prompt with these traits so the whole set stays one family.
+  (Match their *rendering*, not the cartridge label/shape.) Validated on the chokepoint flagship —
+  the anchored version read cleaner and more cohesive than free-form prompting, so this is the
+  default for this site and other projects.
 - **Canvas:** concept icons `32×32` native (export larger only if detail demands, in 16px steps).
   Cartridge stickers `32×24` (fills the wider label window). Boot mark `96×64`.
 - **Palette:** pull from `assets/css/tokens.css`. Max **3–4 colors per icon** + transparent bg.
@@ -90,3 +97,26 @@ concept pixel art → short explanation → real screenshot/evidence → caption
 4. Concepts: drop into a post via the include; verify in-context.
 5. Add the finished set to `CONTENT.md` as the published index (filename + one-line meaning) so the
    icons are reusable and citable — the documentation is what lets others reference them.
+
+---
+
+## 5. Style influences (era + feel, NOT characters)
+
+The house look is inspired by the classic 16-bit console + arcade sprite art the author grew up on
+(SNES platformers, early-90s fighters, run-and-gun action). We emulate the **qualities**, never the
+characters — every generated mark is an original (see the attack-chain creature: an original
+ball-and-chain enemy that evokes the era, not a copy of any specific game's sprite). Reference
+sheets, if kept, stay **local and gitignored** — they are mood reference, never reproduced and
+never published.
+
+Qualities to carry into original icons:
+- **Disciplined limited palette** — a few well-chosen hues per icon, strong value contrast.
+- **Bold 1–2px outline**, mostly single-colour, with clean cel shading (flat fill + one shadow +
+  one highlight). No gradients, no anti-aliasing.
+- **Confident, readable silhouette** — the shape reads instantly at small size.
+- **Expressive energy** — dynamic angles; for effect/FX icons, a bright cyan/white core fading to
+  the edge, like classic projectile and energy effects.
+- **Chunky, deliberate pixels** — chunkier reads more nostalgic than high-res-detailed.
+
+Hard rule: inspiration informs *style* (palette, line weight, shading, pose energy). It never
+authorises reproducing or tracing a specific copyrighted character or sprite.

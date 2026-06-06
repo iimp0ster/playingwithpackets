@@ -3,3 +3,6 @@ _site/
 .jekyll-metadata
 .bundle/
 vendor/
+
+# Local reference art (copyrighted sprite rips) — inspiration only, never committed
+design/refs/

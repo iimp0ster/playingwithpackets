@@ -19,7 +19,7 @@ lose every time someone changes a filename.
 So I built something to fix where I start. It's called **Detection Chokepoints**, and it's live:
 [iimp0ster.github.io/detection-chokepoints](https://iimp0ster.github.io/detection-chokepoints/).
 
-{% include post-pixel-art.html src="/assets/img/pixel/concepts/chokepoint.png" alt="A funnel where many attack paths converge down to a single point" caption="A chokepoint: every variant funnels through the one step the attacker can't avoid." %}
+{% include post-pixel-art.html src="/assets/img/pixel/concepts/chokepoint.png" alt="A steel bear trap with a glowing trigger plate" caption="A chokepoint: the one step the attacker can't avoid — so it's where you catch them in the act." %}
 
 ## The lesson hiding in the last post
 

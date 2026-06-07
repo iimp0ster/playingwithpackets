@@ -52,7 +52,7 @@ body.auto { background:#15101a; }
   color:var(--gb-shell-dark); letter-spacing:.1em; text-transform:uppercase; z-index:1; }
 .gb-top .left { color:#555; }
 .gb-top .right { color:var(--gb-btn-purple); font-weight:bold; }
-.gb-bezel { width:100%; flex:1; background:var(--gb-screen-bezel);
+.gb-bezel { width:100%; flex:0 0 auto; aspect-ratio:1/1; background:var(--gb-screen-bezel);
   border-radius:12px 12px 36px 12px; padding:16px 14px 28px; position:relative;
   box-shadow:inset 0 3px 6px rgba(0,0,0,.6),inset 0 -1px 0 rgba(255,255,255,.05); z-index:1; }
 .gb-led-row { position:absolute; top:24px; left:22px; display:flex; align-items:center; gap:6px;
@@ -66,6 +66,7 @@ body.auto { background:#15101a; }
 .gb-undertext { position:absolute; bottom:6px; left:0; right:0; text-align:center;
   font-family:var(--font-pixel); font-size:.35rem; color:#777; letter-spacing:.15em; }
 .gb-deck { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:center;
+  align-content:center; flex:1 1 auto;
   padding:14px 4px 0; gap:14px; z-index:1; }
 .gb-dpad-wrap { width:96px; height:96px; position:relative; justify-self:start; margin-left:8px; }
 .gb-dpad-cross { position:absolute; background:var(--gb-dpad);
@@ -641,21 +642,19 @@ body.page {
 .gb-boot-stack.power-on { opacity:1; filter:brightness(1) contrast(1); }
 .gb-boot-stack.ready { opacity:1; filter:none; }
 .gb-boot-logo {
-  display:flex; flex-direction:column; align-items:center; gap:3px;
-  margin:6px 0 4px;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  margin:6px 0 6px;
+  opacity:0; transform:translateY(-26px);
+  transition:opacity 300ms ease, transform 480ms cubic-bezier(.18,.89,.32,1.18);
 }
+.gb-boot-logo.shown { opacity:1; transform:translateY(0); }
 .gb-boot-word {
   display:block;
   font-family:var(--font-pixel);
-  font-size:clamp(.42rem,1.7vw,.62rem);
-  color:#0f380f; letter-spacing:.12em; line-height:1.2;
-  opacity:0; transform:translateX(-6px);
-  text-shadow:1px 1px 0 rgba(48,98,48,.28);
-  transition:opacity 300ms ease, transform 360ms cubic-bezier(.22,.61,.36,1);
+  font-size:clamp(1rem,5vw,1.6rem);
+  color:#0f380f; letter-spacing:.1em; line-height:1.3;
+  text-shadow:2px 2px 0 rgba(48,98,48,.3);
 }
-.gb-boot-logo.shown .gb-boot-word { opacity:1; transform:translateX(0); }
-.gb-boot-logo.shown .gb-boot-word:nth-child(2) { transition-delay:80ms; }
-.gb-boot-logo.shown .gb-boot-word:nth-child(3) { transition-delay:160ms; }
 .gb-boot-tagline {
   font-family:var(--font-pixel);
   font-size:clamp(.28rem,1vw,.4rem);
@@ -664,18 +663,29 @@ body.page {
   transition:opacity 340ms ease, transform 380ms ease;
 }
 .gb-boot-tagline.shown { opacity:1; transform:translateY(0); }
-.gb-boot-dots {
-  display:flex; gap:6px; margin-top:6px;
-  opacity:0; transition:opacity 280ms ease;
+.gb-boot-load {
+  display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;
+  opacity:0; transition:opacity 240ms ease;
 }
-.gb-boot-dots.shown { opacity:1; }
-.gb-boot-dots span {
-  width:6px; height:6px; background:#306230;
-  animation:gbBootDot 900ms steps(2,jump-none) infinite;
+.gb-boot-load.shown { opacity:1; }
+.gb-boot-loadbar {
+  width:clamp(110px,46vw,170px); height:10px;
+  border:2px solid #0f380f; background:rgba(15,56,15,.1); padding:1px;
 }
-.gb-boot-dots span:nth-child(2) { animation-delay:150ms; }
-.gb-boot-dots span:nth-child(3) { animation-delay:300ms; }
-@keyframes gbBootDot { 50% { opacity:.2; } }
+.gb-boot-loadfill {
+  display:block; height:100%; width:0; background:#0f380f;
+  transition:width 900ms steps(14,end);
+}
+.gb-boot-load.shown .gb-boot-loadfill { width:100%; }
+.gb-boot-loadtext {
+  font-family:var(--font-pixel);
+  font-size:clamp(.3rem,1.5vw,.44rem);
+  color:#306230; letter-spacing:.2em;
+  animation:gbLoadBlink 650ms steps(2,jump-none) infinite;
+}
+.gb-boot-load.done .gb-boot-loadtext { animation:none; opacity:.45; }
+@keyframes gbLoadBlink { 50% { opacity:.2; } }
+@media (prefers-reduced-motion:reduce) { .gb-boot-loadfill { transition:none; } }
 
 /* PRESS START — GB palette */
 .gb-shell .press-start {
@@ -721,7 +731,7 @@ body.page {
    per-breakpoint rules (e.g. cart-art at 720px)
    ============================================================ */
 @media (min-width:720px) {
-  .gb-boot-word { font-size:clamp(1rem,4.2dvh,1.8rem); }
+  .gb-boot-word { font-size:clamp(1.3rem,5.2dvh,2.3rem); }
   .gb-shell .press-start { font-size:clamp(.55rem,2.4dvh,1rem); }
   #view-menu { padding:clamp(8px,1.8dvh,20px) clamp(10px,2dvh,22px); }
   .menu-head { padding-bottom:clamp(8px,1.5dvh,14px); margin-bottom:clamp(10px,2dvh,18px); }

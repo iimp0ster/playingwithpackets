@@ -147,30 +147,35 @@ function runBoot() {
     <div class="gb-boot-stack">
       <div class="gb-boot-logo"><span class="gb-boot-word">PLAYING</span><span class="gb-boot-word">WITH</span><span class="gb-boot-word">PACKETS</span></div>
       <div class="gb-boot-tagline">DETECTION ENGINE</div>
-      <div class="gb-boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="gb-boot-load" aria-hidden="true">
+        <div class="gb-boot-loadbar"><span class="gb-boot-loadfill"></span></div>
+        <div class="gb-boot-loadtext">NOW LOADING</div>
+      </div>
     </div>
   `;
 
   const stack = msgs.querySelector('.gb-boot-stack');
   const logo = msgs.querySelector('.gb-boot-logo');
   const tagline = msgs.querySelector('.gb-boot-tagline');
-  const dots = msgs.querySelector('.gb-boot-dots');
+  const load = msgs.querySelector('.gb-boot-load');
 
   if (reduced) {
     stack?.classList.add('ready');
     logo?.classList.add('shown');
     tagline?.classList.add('shown');
-    dots?.classList.add('shown');
+    load?.classList.add('shown', 'done');
     showPressStart(400);
     return;
   }
 
+  /* Game-loading feel: logo drops in → loading bar fills in chunky steps → PRESS START. */
   requestAnimationFrame(() => requestAnimationFrame(() => {
     stack?.classList.add('power-on');
-    setTimeout(() => logo?.classList.add('shown'), 320);
-    setTimeout(() => tagline?.classList.add('shown'), 720);
-    setTimeout(() => dots?.classList.add('shown'), 1080);
-    showPressStart(1500);
+    setTimeout(() => logo?.classList.add('shown'), 220);
+    setTimeout(() => tagline?.classList.add('shown'), 700);
+    setTimeout(() => load?.classList.add('shown'), 1000);
+    setTimeout(() => load?.classList.add('done'), 1950);
+    showPressStart(2050);
   }));
 }
 

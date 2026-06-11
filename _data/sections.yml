@@ -19,8 +19,23 @@
   route: /blog/
   external: false
 
-- id: archive
+- id: chokepoints
   order: 2
+  label: "Chokepoints"
+  title: DETECTION CHOKEPOINTS
+  sub: EXTERNAL SITE
+  desc: "Detection is a game of economics — invariant chokepoints attackers can't avoid."
+  meta:
+    - [TYPE, EXTERNAL]
+    - [FOCUS, CHOKEPOINTS]
+  color: "#ff8c1a"
+  letter: C
+  pixel_art: /assets/img/pixel/cartridges/chokepoints.png
+  route: https://iimp0ster.github.io/detection-chokepoints/
+  external: true
+
+- id: archive
+  order: 3
   label: "Archive"
   title: SIGNAL ARCHIVE
   sub: ARCHIVE
@@ -35,7 +50,7 @@
   external: false
 
 - id: about
-  order: 3
+  order: 4
   label: "About"
   title: ABOUT
   sub: PLAYER 1

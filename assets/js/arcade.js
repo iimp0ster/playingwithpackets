@@ -118,6 +118,23 @@ let sections = [];
 let view = 'boot';
 let stageIdx = 0;
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+/* Boot-once-per-session flag. The homepage is the only page that loads this
+   engine; content pages are static. When a reader leaves a content page and
+   returns to "/", the browser reloads index.html and re-runs init(), which used
+   to replay the whole loading animation. We stamp a sessionStorage flag the
+   first time the reader leaves the boot screen, then skip straight to the menu
+   on any later load this session. sessionStorage (not localStorage) so a fresh
+   visit in a new tab/session still gets the full boot once. Wrapped in try/catch
+   because storage access throws in some privacy modes — failing to `false` just
+   means boot plays, i.e. today's behaviour, which is a safe fallback. */
+const BOOTED_KEY = 'arcade-booted';
+function hasBooted() {
+  try { return sessionStorage.getItem(BOOTED_KEY) === '1'; } catch (e) { return false; }
+}
+function markBooted() {
+  try { sessionStorage.setItem(BOOTED_KEY, '1'); } catch (e) {}
+}
 /* ============================================================
    SHELL MOUNTING
    ============================================================ */
@@ -127,7 +144,29 @@ function mountScreen() {
   target.innerHTML = '';
   const tpl = document.getElementById('screen-template').content.cloneNode(true);
   target.appendChild(tpl);
+
+  /* Returning within the same session → land on the weapon-select menu, no
+     loader. Fresh visit → play the boot sequence (which then sets the flag). */
+  if (hasBooted()) {
+    showStageImmediate();
+    return;
+  }
   runBoot();
+}
+
+/* Render and reveal the cartridge stage with no boot/zoom animation. Shared by
+   the skip-boot return path and the reduced-motion path — both want to "land"
+   on the menu, not watch a transition. */
+function showStageImmediate() {
+  const device = document.querySelector('.device');
+  const stage = document.getElementById('cartridge-stage');
+  if (!stage) return;
+  renderCartridgeStage(stage);
+  if (device) device.hidden = true;
+  stage.hidden = false;
+  stage.classList.add('visible');
+  view = 'stage';
+  focusStageCart(0);
 }
 
 function $(sel) {
@@ -192,22 +231,17 @@ function showPressStart(delay) {
 function startGame() {
   if (view !== 'boot') return;
   view = 'transition';
+  markBooted();          // first exit from boot — return trips this session skip the loader
 
-  const reduced = REDUCED_MOTION.matches;
   const device = document.querySelector('.device');
   const stage = document.getElementById('cartridge-stage');
 
-  renderCartridgeStage(stage);
-
-  if (reduced) {
-    device.hidden = true;
-    stage.hidden = false;
-    stage.classList.add('visible');
-    view = 'stage';
-    focusStageCart(0);
+  if (REDUCED_MOTION.matches) {
+    showStageImmediate();
     return;
   }
 
+  renderCartridgeStage(stage);
   document.body.classList.add('boot-zooming');
 
   setTimeout(() => {
@@ -235,7 +269,13 @@ function renderCartridgeStage(stage) {
   const cards = sections.map((s, i) => {
     const target = s.external ? ' target="_blank" rel="noopener noreferrer"' : '';
     const count = sectionCount(s);
-    const countLabel = count ? `${count} SAVE${count === 1 ? '' : 'S'}` : 'READY';
+    /* External sections leave the site, so signal that instead of the internal
+       'READY'/'N SAVES' status (the link already opens in a new tab). The ↗ is
+       rendered in VT323 (the .stage-cart-meta font); verified to render, not a
+       tofu box. */
+    const countLabel = s.external
+      ? 'OPEN ↗'
+      : (count ? `${count} SAVE${count === 1 ? '' : 'S'}` : 'READY');
     return `<a class="stage-cart" href="${s.route}"${target} data-idx="${i}" tabindex="0" aria-label="${s.label}: ${s.desc || ''}">
       <div class="stage-cart-art">${gameBoyCartridge(s)}</div>
       <div class="stage-cart-name">${s.label.replace(/\n/g, '<br>')}</div>
@@ -248,15 +288,41 @@ function renderCartridgeStage(stage) {
     <div class="stage-shell">
       <div class="stage-header">
         <span class="stage-title">SELECT GAME</span>
-        <span class="stage-hud"><span class="stage-hud-label">GAMES</span> <span class="stage-hud-val">${String(totalGames).padStart(2, '0')}</span></span>
+        <span class="stage-header-right">
+          <span class="stage-hud"><span class="stage-hud-label">GAMES</span> <span class="stage-hud-val">${String(totalGames).padStart(2, '0')}</span></span>
+          <button type="button" class="stage-reboot" aria-label="Reboot — replay the boot screen">REBOOT</button>
+        </span>
       </div>
       <div class="stage-grid">${cards}</div>
       <div class="stage-footer">
         <span class="stage-hint">◀ ▶ MOVE</span>
         <span class="stage-hint stage-hint-select">A / START SELECT</span>
+        <span class="stage-hint">R REBOOT</span>
       </div>
     </div>
   `;
+  /* REBOOT is rendered with the stage, so bind it here (the load-time
+     [data-action] handler only sees the static Game Boy shell buttons). */
+  stage.querySelector('.stage-reboot')?.addEventListener('click', (e) => { e.preventDefault(); reboot(); });
+}
+
+/* Power-cycle: tear down the menu, bring the Game Boy shell back, and replay the
+   boot/loading sequence so the reader lands on PRESS START. The skip-boot
+   sessionStorage flag is left as-is — this is an in-session replay, not a reset
+   of the once-per-session loader behaviour. */
+function reboot() {
+  if (view !== 'stage') return;
+  const device = document.querySelector('.device');
+  const stage = document.getElementById('cartridge-stage');
+  if (stage) { stage.classList.remove('visible'); stage.hidden = true; stage.innerHTML = ''; }
+  /* startGame() adds boot-zooming and never clears it; left on, its deviceZoom
+     animation would distort the shell when we show it again. */
+  document.body.classList.remove('boot-zooming');
+  if (device) device.hidden = false;
+  view = 'boot';
+  const ps = $('.press-start');
+  if (ps) ps.classList.remove('shown');   // let it blink back in after the boot
+  runBoot();
 }
 
 function focusStageCart(idx) {
@@ -312,7 +378,11 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft')  { e.preventDefault(); moveStage('left'); return; }
     if (e.key === 'ArrowDown')  { e.preventDefault(); moveStage('down'); return; }
     if (e.key === 'ArrowUp')    { e.preventDefault(); moveStage('up'); return; }
+    if (e.key === 'r' || e.key === 'R') { e.preventDefault(); reboot(); return; }
     if (e.key === 'Enter' || e.key.toLowerCase() === 'z') {
+      /* If the REBOOT button holds focus, let its native activation fire instead
+         of selecting a cartridge. */
+      if (document.activeElement && document.activeElement.classList.contains('stage-reboot')) return;
       e.preventDefault();
       selectStageCart();
     }
@@ -324,6 +394,13 @@ document.querySelectorAll('[data-action]').forEach(b => {
     e.preventDefault();
     if (b.dataset.action === 'select' && view === 'boot') startGame();
     if (b.dataset.action === 'select' && view === 'stage') selectStageCart();
+    /* 'back' (B / SELECT pill) is intentionally inert. These gameboy controls
+       only exist on the boot/title screen — the .device shell is hidden once the
+       menu mounts — and the title screen is the top of the arcade, with nothing
+       behind it. Real return-navigation from content pages is the <a> links in
+       default.html, which now land on the menu via skip-boot instead of the
+       loader. Do NOT wire this to history.back(): on the title screen that would
+       walk the reader off the site. */
   });
 });
 

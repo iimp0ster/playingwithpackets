@@ -98,209 +98,6 @@ body.auto { background:#15101a; }
   box-shadow:inset 0 1px 1px rgba(0,0,0,.4); }
 
 /* ============================================================
-   METAL SLUG ARCADE CABINET
-   ============================================================ */
-.arcade-shell {
-  width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center;
-  background:radial-gradient(ellipse at bottom,#2a0c0a 0%,#0e0404 60%,#000 100%);
-  padding:18px; position:relative;
-}
-.cabinet-wrap {
-  width:100%; max-width:1080px; height:100%; max-height:920px;
-  position:relative; display:flex; flex-direction:column;
-  filter:drop-shadow(0 14px 22px rgba(0,0,0,.7));
-}
-.comic-red {
-  background: linear-gradient(175deg, #CC1515 0%, #AA1010 50%, #6E0A0A 100%);
-}
-
-/* === MARQUEE HOOD === */
-.cab-hood {
-  height:120px; position:relative;
-  display:flex; align-items:center; gap:14px;
-  padding:12px 18px;
-  border-radius:0;
-  border:3px solid var(--ms-black);
-  border-bottom:0;
-  overflow:hidden;
-  margin:0 -6px; width:calc(100% + 12px);
-}
-.cab-speaker {
-  width:64px; height:64px; flex:0 0 auto;
-  border-radius:50%;
-  background:var(--ms-black);
-  box-shadow:inset 0 0 0 4px #2a1414, inset 0 3px 8px rgba(0,0,0,.7), 0 2px 4px rgba(0,0,0,.4);
-  position:relative; overflow:hidden;
-}
-.cab-speaker::before {
-  content:""; position:absolute; inset:8px; border-radius:50%;
-  background-image:radial-gradient(circle, #3a1c1c 1px, transparent 1.6px);
-  background-size:7px 7px;
-}
-.cab-marquee-plate {
-  flex:1; height:100%;
-  background:var(--ms-black);
-  border-radius:6px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  position:relative; overflow:hidden;
-  box-shadow:inset 0 0 0 2px #2a1414;
-}
-.cab-marquee-plate::before {
-  content:""; position:absolute; inset:0;
-  background:
-    radial-gradient(circle at 20% 40%, rgba(232,53,42,.4) 0%, transparent 30%),
-    radial-gradient(circle at 75% 60%, rgba(255,140,26,.25) 0%, transparent 35%),
-    linear-gradient(180deg, rgba(122,16,16,.5), transparent);
-  pointer-events:none;
-}
-.cab-logo {
-  font-family:var(--font-metalslug);
-  font-size:clamp(1.3rem,3.2vw,2.4rem);
-  color:#E8352A; paint-order:stroke fill;
-  -webkit-text-stroke:4px #000;
-  letter-spacing:0.03em;
-  text-align:center; line-height:0.95;
-  position:relative; z-index:1;
-  transform:skew(-4deg);
-  text-shadow:
-    2px 2px 0 #000,
-    3px 3px 0 #000,
-    4px 4px 0 rgba(0,0,0,.7),
-    0 0 22px rgba(232,53,42,.4);
-}
-.cab-logo small {
-  display:block;
-  font-family:var(--font-pixel);
-  font-size:.4rem;
-  color:var(--ms-cream);
-  letter-spacing:.3em;
-  -webkit-text-stroke:0;
-  text-shadow:1px 1px 0 #000;
-  margin-top:6px; transform:skew(5deg);
-}
-
-/* === BODY === */
-.cab-body {
-  flex:1; position:relative;
-  border:3px solid var(--ms-black); border-top:0; border-bottom:0;
-  padding:0;
-  display:flex; flex-direction:column;
-  background:linear-gradient(180deg,
-    #1A0808 0%, #6E2004 20%, #CC6010 42%,
-    #AA4008 60%, #4A1004 82%, #1A0808 100%);
-}
-.cab-screen-header {
-  height:26px; flex:0 0 auto;
-  border-bottom:3px solid var(--ms-black);
-  position:relative; overflow:hidden;
-}
-.cab-screen-header::after {
-  content:"★ INSERT COIN ★  1 CREDIT  ★";
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-family:var(--font-pixel); font-size:.5rem; color:var(--ms-yellow);
-  letter-spacing:.15em; text-shadow:1px 1px 0 #000; white-space:nowrap;
-}
-.cab-screen-zone {
-  flex:1; padding:16px; position:relative;
-  display:flex;
-}
-.cab-screen-bezel {
-  flex:1; background:var(--ms-black);
-  border-radius:0; padding:14px;
-  box-shadow:inset 0 3px 10px rgba(0,0,0,.8), inset 0 -1px 0 #2a1414;
-}
-.cab-screen {
-  width:100%; height:100%; background:var(--bg-screen);
-  border-radius:0; position:relative; overflow:hidden;
-  box-shadow:inset 0 0 70px rgba(232,53,42,.08), inset 0 0 150px rgba(0,0,0,.85);
-}
-
-/* === CONTROL DECK === */
-.cab-deck {
-  height:72px; flex:0 0 auto; position:relative;
-  border:3px solid var(--ms-black);
-  overflow:hidden;
-}
-.cab-deck::before {
-  content:""; position:absolute; inset:0;
-  background:#0E0808;
-}
-.cab-deck::after {
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,.2) 0%, transparent 30%, rgba(0,0,0,.35) 100%);
-}
-.cab-controls {
-  position:absolute; inset:0;
-  display:grid; grid-template-columns:1fr 1fr; align-items:center;
-  padding:0 48px; gap:16px; z-index:2;
-}
-.cab-joystick { position:relative; width:36px; height:44px; pointer-events:none; }
-.cab-joy-plate {
-  position:absolute; bottom:2px; left:50%; transform:translateX(-50%);
-  width:34px; height:34px; border-radius:50%;
-  background:radial-gradient(circle at 50% 40%, #2a2028, #0e0a0e);
-  box-shadow:inset 0 2px 4px rgba(255,255,255,.1), 0 2px 4px rgba(0,0,0,.5);
-}
-.cab-joy-shaft {
-  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
-  width:5px; height:20px; background:linear-gradient(180deg,#4a4250,#1a1820); border-radius:3px;
-  box-shadow:inset -1px 0 0 #5a5260, inset 1px 0 0 rgba(0,0,0,.4); }
-.cab-joy-ball {
-  position:absolute; top:0; left:50%; transform:translateX(-50%);
-  width:18px; height:18px; border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #ff8060 0%, var(--ms-red-bright) 40%, #7a1010 100%);
-  box-shadow:inset -1px -2px 0 rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.5); }
-.cab-joy-ball::after { content:""; position:absolute; top:3px; left:4px; width:5px; height:3px; background:rgba(255,255,255,.55); border-radius:50%; }
-.cab-buttons { display:grid; grid-template-columns:repeat(3,40px); grid-template-rows:repeat(2,40px);
-  gap:9px 11px; justify-content:center; align-content:center; justify-self:end; margin-right:18px; }
-.cab-btn {
-  width:24px; height:24px; border-radius:50%; position:relative;
-  box-shadow:
-    0 0 0 3px #0a0606,
-    0 0 0 5px #1c1010,
-    0 4px 7px rgba(0,0,0,.9),
-    inset 0 -4px 5px rgba(0,0,0,.5),
-    inset 0 2px 3px rgba(255,255,255,.15);
-}
-.cab-btn::before {
-  content:""; position:absolute; inset:0; border-radius:50%;
-  background:radial-gradient(circle at 38% 28%, rgba(255,255,255,.38) 0%, transparent 58%);
-  pointer-events:none; z-index:1;
-}
-.cab-btn::after {
-  content:""; position:absolute; top:4px; left:6px;
-  width:8px; height:5px;
-  background:rgba(255,255,255,.78); border-radius:50%;
-  transform:rotate(-15deg); z-index:2;
-}
-.cab-btn.yellow { background:radial-gradient(circle at 38% 28%, #fff5c0 0%, var(--ms-yellow) 42%, #a87808 80%, #5a3e00 100%); }
-.cab-btn.red    { background:radial-gradient(circle at 38% 28%, #ff7060 0%, #cc1515 42%, #7a0808 80%, #3a0202 100%); }
-.cab-btn.blue   { background:radial-gradient(circle at 38% 28%, #b8ddff 0%, #2060c0 42%, #0a2870 80%, #040e38 100%); }
-.cab-btn.green  { background:radial-gradient(circle at 38% 28%, #b0ffb0 0%, #20a020 42%, #0a5008 80%, #023002 100%); }
-.cab-controls-cluster { display:flex; align-items:center; gap:10px; justify-content:center; }
-.cab-buttons-sm { grid-template-columns:repeat(2,24px); grid-template-rows:repeat(2,24px); gap:8px; }
-.cab-joy-ball.p2 { background:radial-gradient(circle at 35% 30%, #80c0ff 0%, #2060c0 50%, #0a2870 100%); }
-
-/* === BASE === */
-.cab-base {
-  height:44px; flex:0 0 auto; position:relative;
-  border:3px solid var(--ms-black); border-top:0;
-  border-radius:0;
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden;
-}
-.cab-base-logo {
-  font-family:var(--font-stencil); font-size:1.1rem; color:var(--ms-yellow);
-  letter-spacing:.05em; transform:skew(-5deg);
-  text-shadow:2px 2px 0 var(--ms-red-deep), 3px 3px 0 var(--ms-black);
-  -webkit-text-stroke:1px var(--ms-red-dark); position:relative; z-index:1;
-}
-.cab-base::after {
-  content:""; position:absolute; bottom:-8px; left:8%; right:8%; height:8px;
-  background:rgba(0,0,0,.5); border-radius:50%; filter:blur(5px);
-}
-
-/* ============================================================
    VIEWS (shared — rendered inside the screen mount point)
    ============================================================ */
 .view { position:absolute; inset:0; display:flex; flex-direction:column; opacity:0;
@@ -500,7 +297,10 @@ body.page {
   color:var(--ink-dim); line-height:1.5;
   border-top:1px dashed rgba(138,180,58,.2);
 }
-.post-pixel-art {
+/* Scoped under .page-content so the auto side-margins win over the generic
+   `.page-content figure { margin:24px 0 }` rule (higher specificity) — otherwise
+   the capped-width figure pins left instead of centering in the column. */
+.page-content .post-pixel-art {
   max-width:min(100%, 520px);
   margin:28px auto;
   background:var(--gbc-dmg);
@@ -527,6 +327,12 @@ body.page {
   background:var(--gbc-page-panel);
   border-top:3px solid var(--gbc-page-border);
   color:var(--ink-dim);
+}
+/* Rule-tier badge icons inline in post tables (research/hunt/analyst). */
+.tier-badge {
+  width:18px; height:18px;
+  image-rendering:pixelated;
+  vertical-align:-4px; margin-right:6px;
 }
 .page-content table {
   display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;
@@ -809,6 +615,20 @@ body.boot-zooming .device {
   color:var(--ink-faint); letter-spacing:.1em; text-transform:uppercase;
 }
 .stage-hud-val { color:var(--gbc-lcd); }
+/* Right side of the menu header: GAMES count + the REBOOT button (replays the
+   boot/loading screen). In the header so it stays visible at the top on mobile,
+   where the footer sits below the cartridge stack. */
+.stage-header-right { display:flex; align-items:center; gap:clamp(10px,2.4vw,18px); }
+.stage-reboot {
+  font-family:var(--font-pixel); font-size:clamp(.4rem,1.2vw,.52rem);
+  color:var(--gbc-lcd); letter-spacing:.1em; text-transform:uppercase;
+  background:transparent; border:2px solid var(--gbc-lcd-dim);
+  padding:7px 11px; border-radius:2px; cursor:pointer;
+  transition:background 110ms, color 110ms, border-color 110ms;
+}
+.stage-reboot:hover, .stage-reboot:focus-visible {
+  color:#0c1008; background:var(--gbc-lcd); border-color:var(--gbc-lcd); outline:none;
+}
 
 .stage-grid {
   display:grid;

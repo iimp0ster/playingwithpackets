@@ -51,19 +51,31 @@ attempt cost real engineering time. Time is money on both sides of this, and the
 spend theirs instead of yours.
 
 That trade gets more lopsided every year, because the offense keeps getting cheaper and faster. The
-2020 ransomware chain was a manual, roughly 10–14-day affair: break in, run discovery, dump
+2020 [ransomware chain](https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf) was a manual, roughly 10–14-day affair: break in, run discovery, dump
 credentials, escalate, move laterally, then deploy. The 2025 version is broker-enabled and squeezed
 to **under 48 hours**, with whole phases (discovery, recon, often privilege escalation) skipped
-because someone else already did them. Mandiant's M-Trends 2025 shows the same thing in aggregate:
-median dwell time has fallen year over year. You have far less window to catch an intrusion, so the
-detection had better sit on something that's *always* present, not on a name you'd need luck to
-recognize in time.
+because someone else already did them. [Mandiant's M-Trends 2025](https://services.google.com/fh/files/misc/m-trends-2025-en.pdf) shows the same thing in aggregate:
+median dwell time has fallen year over year. Palo Alto's [2026 Unit 42 Global Incident Response Report](https://www.paloaltonetworks.com/resources/research/unit-42-incident-response-report)
+puts a number on the sharp end of that curve: the fastest quartile of intrusions went from initial
+compromise to data theft in 285 minutes in 2024, and just 72 minutes in 2025. You have far less
+window to catch an intrusion, so the detection had better sit on something that's *always* present,
+not on a name you'd need luck to recognize in time.
+
+{% include post-screenshot.html src="/assets/img/posts/detection-chokepoints-where-to-start/unit42-time-to-exfiltration.png" alt="Unit 42 quartile chart: first-quartile time-to-exfiltration fell from 285 minutes in 2024 to 72 minutes in 2025" caption="From the 2026 Unit 42 Global Incident Response Report (Figure 2): the fastest quartile of intrusions reached exfiltration in 72 minutes in 2025, down from 285 the year before. Whatever your detection is anchored to has to fire inside that window." %}
 
 And the inputs have commoditized. Infostealer logs are now a routine first step into a network
-(HudsonRock, Red Canary), and Initial Access Brokers sell that foothold pre-enriched: privilege
-level, access type, even which EDR is running in the environment (Cyberint). The tooling layered on
+([HudsonRock](https://www.infostealers.com/article/private-stealing-the-future-infostealers-power-cybercrime-in-2025/), [Red Canary](https://redcanary.com/threat-detection-report/trends/info-stealers/)), and Initial Access Brokers sell that foothold pre-enriched: privilege
+level, access type, even which EDR is running in the environment ([Cyberint](https://e.cyberint.com/hubfs/IAB%20Report%202025.pdf)). The tooling layered on
 top rotates constantly precisely because it's cheap and interchangeable, which is the exact reason a
 detection pinned to it keeps dying.
+
+None of that speed comes from one gang getting better. It's an economy. The UK's NCSC and NCA
+[mapped the supply chain](https://www.ncsc.gov.uk/whitepaper/ransomware-extortion-and-the-cyber-crime-ecosystem):
+every function below can be run by a different actor and sold to the others as a service.
+Specialization is exactly why the end-to-end attack got fast, and it's also why the tooling at any
+single stage is so disposable.
+
+{% include post-screenshot.html src="/assets/img/posts/detection-chokepoints-where-to-start/ncsc-raas-ecosystem.png" alt="NCSC/NCA diagram of the ransomware ecosystem: distribution, stealers, loaders, access marketplaces, initial access brokers, affiliates, and RaaS operators on top of shared financial, hosting, and anonymisation services" caption="The ransomware service economy, from the NCSC/NCA white paper 'Ransomware, extortion and the cyber crime ecosystem' (2023, Figure 2). Each box is a separate business. The boxes change vendors constantly; the workflow between them is the part that holds still." %}
 
 A chokepoint is where you flip that math. Because unrelated threats overlap on the same invariant
 steps, one detection placed there covers many actors at once, and one log source ends up catching

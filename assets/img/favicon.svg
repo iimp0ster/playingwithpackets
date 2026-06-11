@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Game Boy cartridge: yellow shell, notched top-right, green LCD label -->
+  <path d="M7 4 H21.5 L26 8.5 V27 a2 2 0 0 1 -2 2 H9 a2 2 0 0 1 -2 -2 Z"
+        fill="#ffd23a" stroke="#15110a" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- label -->
+  <rect x="10" y="8" width="12" height="8.5" rx="1" fill="#f4e8d0" stroke="#15110a" stroke-width="1"/>
+  <!-- green LCD screen on the label -->
+  <rect x="12.4" y="10.1" width="7.2" height="4.3" fill="#9bbc0f"/>
+  <!-- grip ridges -->
+  <g fill="#15110a">
+    <rect x="10.5" y="22" width="1.8" height="5"/>
+    <rect x="15.1" y="22" width="1.8" height="5"/>
+    <rect x="19.7" y="22" width="1.8" height="5"/>
+  </g>
+</svg>

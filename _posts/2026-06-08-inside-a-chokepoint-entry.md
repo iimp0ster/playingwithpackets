@@ -3,89 +3,158 @@ layout: post
 title: "Inside a Chokepoint Entry: A ClickFix Walkthrough"
 date: 2026-06-08
 tags: [detection, chokepoints, clickfix, sigma]
-excerpt: "The chokepoints post made the case for anchoring detection to what attackers can't avoid. This one is the practical side: what an actual entry gives you, walked through with ClickFix."
+excerpt: "A guided tour of a Detection Chokepoints entry, section by section, using ClickFix as the example. What each part of the page holds and how to turn it into detections you can actually deploy."
 ---
 
-In the [Detection Chokepoints](/blog/detection-chokepoints-where-to-start/) post I made the case
-for anchoring detection to the one step an attacker can't avoid. That's the idea. This post is the
-practical side: what an actual entry gives you and how to work through one. I'll use the
+The [Detection Chokepoints: Where to Start](/blog/detection-chokepoints-where-to-start/) post made the
+case for anchoring detection to the one step an attacker can't avoid. This post is a tour of the page
+itself. Every entry in the project is laid out the same way, so once you can read one, you can read all
+of them. I'll walk the
 [ClickFix entry](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/)
-as the tour, since it's a technique most defenders are already fighting.
+top to bottom and, for each section, say what it holds and how to actually use it.
 
-## The constant, up top
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/clickfix-entry.png" alt="The ClickFix entry on Detection Chokepoints, showing the title, the one-line invariant, and the priority, ATT&CK, difficulty, and prevalence badges" caption="The ClickFix entry. Every chokepoint follows this layout: the invariant and at-a-glance badges up top, then the sections below." %}
 
-Every entry leads with the invariant, the thing that doesn't change. For ClickFix it's:
+## The hero: the invariant and the at-a-glance read
+
+The top of every entry leads with the [invariant](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#overview),
+the thing that doesn't change. For ClickFix:
 
 > Clipboard write → user pastes into interpreter → outbound C2 connection.
 
-Alongside it you get the quick read on the technique: severity (HIGH), prevalence (HIGH),
-detection difficulty (LOW), and the ATT&CK mapping (T1204.004, malicious copy-paste). That one
-line is the whole reason the entry exists. It holds across every variant the project tracks, so
-if you instrument it, you're not chasing names.
+Around it sit the badges: tactic (Initial Access), the ATT&CK mapping (T1204.004, malicious copy-paste),
+priority (HIGH), prevalence (HIGH), and detection difficulty (LOW).
 
-## The chokepoint, broken into stages
+**How to use it:** the one line is the whole reason the entry exists; instrument that and you're not
+chasing tool names. The badges are triage. Prevalence and priority tell you whether to work it this
+sprint; difficulty sets your expectations going in; the T-ID drops straight into your ATT&CK coverage
+map so you know where this sits against everything else.
 
-The entry doesn't hand you a single rule. It breaks the invariant into the stages the attacker
-has to move through, and each stage is its own detection opportunity:
+## Attack Chokepoints: the invariant split into stages
 
-1. **Clipboard Seeding**: the lure page writes a command to the clipboard via JavaScript *and*
-   shows paste instructions. Both have to be true; that co-occurrence is the tell.
-2. **Interpreter Execution**: a script interpreter spawns as a child of `explorer.exe`, a
-   browser, or `wt.exe`.
-3. **Second Stage Retrieval**: the interpreter reaches out to attacker infrastructure to pull
-   the real payload.
+The entry doesn't hand you one rule. The
+[Attack Chokepoints](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#attack-chokepoints)
+section breaks the invariant into the stages the attacker has to move through, and each stage is its own
+detection opportunity. For ClickFix:
 
-The reason this matters: if one stage is blind in your environment, you still have two more shots
-at it. You're not betting the detection on a single event.
+1. **Clipboard Seeding**: the lure page writes a command to the clipboard via JavaScript *and* shows
+   paste instructions. Both must be true; the co-occurrence is the tell.
+2. **Interpreter Execution**: a script interpreter spawns as a child of `explorer.exe`, a browser, or
+   `wt.exe`.
+3. **Second Stage Retrieval**: the interpreter reaches out to attacker infrastructure for the payload.
 
-## Detection at the tier your SOC can actually run
+Each stage carries the invariant, the observable (e.g. *Sysmon EID 1: interpreter with
+`ParentImage` = explorer/browser/wt.exe*), a "why it can't be bypassed" note, the exact log sources, a
+maturity tier, and a real true-positive example.
 
-Each stage carries rules at the maturity tiers, and, where it's possible, earlier pre-execution
-options like an ETW clipboard-write rule or an IOK rule on the lure page itself. For every rule
-the entry spells out:
+**How to use it:** pick the stage your telemetry already covers. Clipboard ETW out of reach? Interpreter
+Execution is plain Sysmon process creation. If one stage is blind in your environment, the other two
+still fire. You're never betting the detection on a single event. The "why can't bypass" line tells you
+which signals survive a lure redesign and which are cosmetic.
 
-- **Goal**: what the rule is trying to catch
-- **Log / Data Sources**: what you need to be collecting for it to work
-- **FP Rate**: how noisy it'll be
-- **Use Case**: when to deploy it (baseline, hunt, or production alert)
-- **Detection Logic**: the condition in plain pseudocode
-- **Bypass Risk**: how it can be evaded, stated honestly
-- **Sigma rule**: the full YAML, copy it or pull it from GitHub
+## Variations: proof the chokepoint holds, and where parents change
 
-So you're not just told "detect ClickFix." You're told what to deploy, where, and what it'll cost
-you in noise, which is the part that decides whether a detection survives contact with a real SOC.
+The
+[Variations](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#variations)
+section tracks nine variants: the original ClickFix, FileFix, TerminalFix, DownloadFix, the
+JackFix/GlitchFix/ConsentFix family, WebDAV ClickFix, InstallFix, a Windows Terminal version, and a
+DNS-based one. Each shows the lure the user sees, a defanged copy of the payload, and a one-line mapping
+back to the same chokepoint.
 
-## Variations: the proof the chokepoint holds
+Expand any variant and the entry embeds a live preview of the lure itself. A few of the distinct ones:
 
-The entry tracks nine variants: the original ClickFix, FileFix, TerminalFix, DownloadFix, the
-JackFix/GlitchFix/ConsentFix family, WebDAV ClickFix, InstallFix, a Windows Terminal version that
-parents off `wt.exe`, and a DNS-based one that stages its payload through `nslookup` to dodge URL
-filtering. Each one shows the lure the user sees, a defanged copy of the clipboard payload, and a
-one-line note that it routes through the *same* chokepoint.
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-captcha.png" alt="Simulated fake Cloudflare CAPTCHA page instructing the user to press Win+R, paste, and hit Enter" caption="Simulated lure (defanged recreation): the classic fake Cloudflare CAPTCHA. The steps walk the victim through Win+R, Ctrl+V, Enter." %}
 
-That's the point of the section. It's not a list to memorize: it's evidence. Every new lure since
-2024 still funnels through clipboard seeding, interpreter execution, and a network callback. The
-constant held.
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-terminalfix.png" alt="Simulated fake human-verification page instructing the user to open PowerShell or Terminal as admin" caption="Simulated lure: the TerminalFix pretext steers the victim to open PowerShell/Terminal instead of the Run dialog." %}
 
-## The evidence, and a way to generate it yourself
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-installfix.png" alt="Simulated clone of the Claude Code install docs page with a malicious install command" caption="Simulated lure: InstallFix clones a real tool's install page (here, Claude Code) and swaps the install one-liner for a malicious mshta call." %}
 
-Two sections I lean on the most. **Raw Log Samples** shows the real Sysmon events the chain
-produces: process creation (the interpreter spawning), the DNS query, and the outbound network
-connection, so you know exactly what you're looking for before you go looking. And **Emulation**
-gives you a lab-only script that reproduces the behavior, so you can fire the chain in a controlled
-box and confirm your rules actually trigger. I don't deploy a detection I've never watched fire,
-and this is how you avoid having to.
+**How to use it:** this section does two jobs. First it's evidence: every lure since 2024 still funnels
+through clipboard seeding, interpreter execution, and a network callback. The constant held. Second, and
+more practically, it flags the variants that move the goalposts on your rules: the Windows Terminal
+variant parents off `wt.exe` instead of `explorer.exe`, and the DNS-based one swaps HTTP for `nslookup`.
+If your hunt only watches browser and explorer parents, this is where you find out what you're missing.
 
-Rounding it out, **OSINT Pivots** gives URLScan and VirusTotal queries to hunt the infrastructure,
-and **Related Chokepoints** links out to the entries this commonly chains with (Renamed RMM Tools,
-Ransomware Service Manipulation) so you can follow the kill chain instead of stopping at one step.
+## Detection Strategy: rules at the tier your SOC can run
+
+[Detection Strategy](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#detection-strategy)
+gives the same logic at three maturity tiers, plus pre-execution layers (an ETW clipboard-write rule and
+an IOK rule on the lure page). For ClickFix:
+
+- **Research**: any interpreter making an outbound connection, no parent filter. High FP, for building
+  your baseline.
+- **Hunt**: parent = browser / `explorer.exe` / `wt.exe` spawning an interpreter. Medium FP.
+- **Analyst**: the hunt filter plus encoded or suspicious command-line content (`-enc`,
+  `FromBase64String`, `IEX`, `net use`, `nslookup`). Low FP, SOC alert.
+
+Every rule spells out its goal, the log sources you need, the logic in plain pseudocode, the expected FP
+rate, the use case, and the full Sigma YAML to copy.
+
+**How to use it:** deploy at the tier you can actually operate. Start at Research to learn what legitimate
+interpreter traffic looks like in your environment, then climb to Hunt and Analyst as you tune. The FP
+rate and use case decide whether a rule belongs in a hunt or a paging alert. That's the part that
+determines whether a detection survives contact with a real SOC.
+
+## Prevention Opportunities: stop it before it executes
+
+[Prevention Opportunities](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#prevention)
+covers the controls that break the chain rather than just catch it: block browsers and shells from
+spawning interpreters (`mshta.exe`, `wscript.exe`, `powershell.exe`, `cscript.exe`), restrict the Run
+dialog and enforce PowerShell Constrained Language Mode, and DNS-filter freshly registered domains. Each
+control names exactly what it interrupts in the chain.
+
+**How to use it:** detection catches it, control stops it. Pair every detection you deploy with a
+preventive ask to your endpoint team. Spawn control, for instance, breaks ClickFix at interpreter
+execution even when the user does paste and hit Enter.
+
+## Raw Log Samples: what the telemetry actually looks like
+
+[Raw Log Samples](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#raw-logs)
+shows the real events the chain produces: Sysmon EID 1 (`powershell.exe` spawned by `chrome.exe` with an
+`-EncodedCommand`), EID 22 (the DNS query from the interpreter), and EID 3 (the outbound connection to a
+non-RFC1918 IP), all with full fields.
+
+**How to use it:** know the exact event shape before you go looking. Confirm your pipeline is actually
+capturing `ParentImage`, `CommandLine`, `DestinationIp`, and the rest; tune your field extractions
+against these samples; and keep them as the "what good looks like" reference when you validate a rule.
+
+## Emulation: fire the chain yourself
+
+[Emulation](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#emulation)
+gives a lab-only PowerShell script that reproduces the behavior (an encoded command plus a benign
+outbound request to `example.com`), mapped to the Atomic Red Team technique, with safety notes.
+
+**How to use it:** I don't deploy a detection I've never watched fire. Run this in an isolated VM, watch
+your rule trigger (or fail to), fix it, then ship. It closes the loop between "wrote a rule" and
+"confirmed it works against the behavior."
+
+## OSINT Pivots: hunt the infrastructure
+
+OSINT Pivots gives ready-to-run URLScan and VirusTotal queries: URLScan for
+`navigator.clipboard.writeText` co-occurring with "Verify", "I am not a robot", or "Win+R", and VT
+Intelligence for `nslookup` + PowerShell or encoded-PowerShell droppers.
+
+**How to use it:** go proactive. Run these to surface live lures and staging infrastructure, enrich what
+you find, and feed it to your blocks. Each query carries a note on what it catches and how to widen it.
+Swap "Win+R" for "Terminal" and you're hunting TerminalFix.
+
+## Related Chokepoints and References
+
+The
+[Related Chokepoints](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#related)
+section links the entries this commonly chains with (Renamed RMM Tools, Ransomware Service Manipulation),
+and References lists the primary sources behind the entry (Proofpoint, Microsoft, Huntress, MITRE
+T1204.004, ClickGrab, and others).
+
+**How to use it:** follow the kill chain instead of stopping at one step, and go to the primary sources
+when you need to verify a claim or brief someone who wasn't in the weeds with you.
 
 ## That's the whole shape
 
-Invariant up top, staged detections in the middle, variants and raw telemetry to back it,
-emulation to test it. Every chokepoint in the project is built the same way; ClickFix is just a
-good one to learn on. Pick the stage your telemetry already covers, deploy the Research-tier rule,
-watch it in your environment, and climb from there.
+Invariant up top, staged detections in the middle, variants and raw telemetry to back them, emulation to
+test them, prevention to shift left. Every chokepoint in the project is built this way. ClickFix is just
+a good one to learn on. Pick the stage your telemetry already covers, deploy the Research-tier rule,
+watch it fire in your environment, and climb from there.
 
 Browse it for yourself:
 [**the ClickFix entry**](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/).

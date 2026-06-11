@@ -8,9 +8,9 @@ layout: default
 {% endif %}
 <div class="section-list">
   {% if page.collection == "archive" %}
-    {% assign items = site.archive | sort: "date" | reverse %}
+    {% assign items = site.archive | sort: "date" %}
   {% else %}
-    {% assign items = site.posts %}
+    {% assign items = site.posts | sort: "date" %}
   {% endif %}
   {% if items.size == 0 %}
     <p class="section-empty">No posts yet — check back soon.</p>

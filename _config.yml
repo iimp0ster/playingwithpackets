@@ -32,6 +32,10 @@ defaults:
       type: archive
     values:
       layout: archive
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/social/og.png
 
 exclude:
   - Gemfile

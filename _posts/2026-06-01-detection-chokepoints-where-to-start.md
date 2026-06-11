@@ -51,17 +51,17 @@ attempt cost real engineering time. Time is money on both sides of this, and the
 spend theirs instead of yours.
 
 That trade gets more lopsided every year, because the offense keeps getting cheaper and faster. The
-2020 ransomware chain was a manual, roughly 10–14-day affair: break in, run discovery, dump
+2020 [ransomware chain](https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf) was a manual, roughly 10–14-day affair: break in, run discovery, dump
 credentials, escalate, move laterally, then deploy. The 2025 version is broker-enabled and squeezed
 to **under 48 hours**, with whole phases (discovery, recon, often privilege escalation) skipped
-because someone else already did them. Mandiant's M-Trends 2025 shows the same thing in aggregate:
+because someone else already did them. [Mandiant's M-Trends 2025](https://services.google.com/fh/files/misc/m-trends-2025-en.pdf) shows the same thing in aggregate:
 median dwell time has fallen year over year. You have far less window to catch an intrusion, so the
 detection had better sit on something that's *always* present, not on a name you'd need luck to
 recognize in time.
 
 And the inputs have commoditized. Infostealer logs are now a routine first step into a network
-(HudsonRock, Red Canary), and Initial Access Brokers sell that foothold pre-enriched: privilege
-level, access type, even which EDR is running in the environment (Cyberint). The tooling layered on
+([HudsonRock](https://www.infostealers.com/article/private-stealing-the-future-infostealers-power-cybercrime-in-2025/), [Red Canary](https://redcanary.com/threat-detection-report/trends/info-stealers/)), and Initial Access Brokers sell that foothold pre-enriched: privilege
+level, access type, even which EDR is running in the environment ([Cyberint](https://e.cyberint.com/hubfs/IAB%20Report%202025.pdf)). The tooling layered on
 top rotates constantly precisely because it's cheap and interchangeable, which is the exact reason a
 detection pinned to it keeps dying.
 

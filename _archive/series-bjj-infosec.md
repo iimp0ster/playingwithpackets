@@ -2,7 +2,7 @@
 layout: archive
 title: "Series: Brazilian Jiu-Jitsu and InfoSec"
 date: 2020-11-23
-description: "Parallels between BJJ and InfoSec — metacognition, memory palaces, and thinking under pressure."
+description: "Parallels between BJJ and InfoSec: metacognition, memory palaces, and thinking under pressure."
 original_url: https://playingwithpackets.com/series-brazilian-jiu-jitsu-and-infosec/
 archived: true
 ---
@@ -11,7 +11,7 @@ Lately, I have been thinking a lot about the various parallels between Brazilian
 
 ## So why BJJ and InfoSec?
 
-### Chris Sanders — Investigation Theory
+### Chris Sanders: Investigation Theory
 
 Last year, I had the pleasure of taking a class called "Investigation Theory", which is instructed by Chris Sanders. The main objective of the class is how to think through a security investigation with the available data sources you have access to, knowing how to pivot off of those data sources, and how to limit your own biases. What stood out to me was the section on metacognition; the awareness of one's thinking or learning processes. To dive further into this, I read one of the books Chris recommends called "Make It Stick." In the book, there is a memorization technique called "Memory Palace." Essentially, it's a method which involves storing information as associative images mentally, then placing these images in virtual locations like your house or street. When walking through this virtual space, you can retrieve the stored information. I'll go over this in more depth in another blog post.
 
@@ -23,6 +23,6 @@ I wanted to add to the conversation that Tim and Jeremiah had already started. I
 
 Often times, when I think of a security concept, it's difficult for me to visualize in my mind. In order to understand it, I have to spin up a virtual lab and walk through it step by step myself in order to see what exactly is happening. Since there are many analogies between InfoSec and jiu-jitsu I think BJJ can bridge the gap to make security concepts easily understood by all, especially non-technical audiences. Below you'll find a few topics that are relevant in both disciplines.
 
-{% include post-screenshot.html src="/assets/img/posts/series-bjj-infosec/bjj-topics.png" alt="Table mapping Brazilian Jiu-Jitsu concepts to their InfoSec equivalents" caption="A few parallels across both disciplines — dire consequences, learning fast through positional sparring vs. purple teaming, fundamentals over flash, prevention through understanding, and cataloguing threats." %}
+{% include post-screenshot.html src="/assets/img/posts/series-bjj-infosec/bjj-topics.png" alt="Table mapping Brazilian Jiu-Jitsu concepts to their InfoSec equivalents" caption="A few parallels across both disciplines: dire consequences, learning fast through positional sparring vs. purple teaming, fundamentals over flash, prevention through understanding, and cataloguing threats." %}
 
 Feel free to substitute jiu-jitsu for another sport or activity that has a similar offense-defense strategy. The goal of this series is to think of InfoSec concepts in a different way that resonates with the reader on a personal level.

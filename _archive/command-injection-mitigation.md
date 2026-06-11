@@ -2,7 +2,7 @@
 layout: archive
 title: "Command Injection Mitigation"
 date: 2018-12-02
-description: "Defensive controls for command injection — input validation, least privilege, and sandboxing."
+description: "Defensive controls for command injection: input validation, least privilege, and sandboxing."
 original_url: https://playingwithpackets.com/command-injection-mitigation/
 archived: true
 ---
@@ -13,7 +13,7 @@ Input validation involves verifying user data before it passes through an applic
 
 ## Least Privilege
 
-The principle of least privilege means computer system users possess only the minimum functions necessary for their tasks. On Windows systems, regular users shouldn't open command prompts with administrative privileges — only System or Network Administrators should. For web applications, the `www-data` user shouldn't execute system commands. Alternatively, whitelist a single command (like `nslookup`) if that's the application's only function, blocking all other system commands to reduce attack surface.
+The principle of least privilege means computer system users possess only the minimum functions necessary for their tasks. On Windows systems, regular users shouldn't open command prompts with administrative privileges: only System or Network Administrators should. For web applications, the `www-data` user shouldn't execute system commands. Alternatively, whitelist a single command (like `nslookup`) if that's the application's only function, blocking all other system commands to reduce attack surface.
 
 ## Web Shell Detection
 

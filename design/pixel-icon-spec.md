@@ -7,8 +7,9 @@ each entry below is a one-line prompt seed + target size + destination path. Thi
 
 Status: **cartridges DONE** — built as full PixelLab GB-cartridge PNGs (not the label-sticker
 approach in §2, which was superseded per user direction). `gameBoyCartridge()` renders
-`section.pixel_art` as the whole cartridge `<img>`, SVG body as fallback. **Concept-icon set (§3)
-in progress.**
+`section.pixel_art` as the whole cartridge `<img>`, SVG body as fallback. **Section-nav icon set
+(chokepoint, attack-chain, trends, framework) DONE at 64×64 (also used as the section links on the
+detection-chokepoints site); rest of the concept-icon set (§3) pending.**
 
 ---
 
@@ -24,8 +25,9 @@ These rules are what make the set read as *one family* and become recognizable �
   (Match their *rendering*, not the cartridge label/shape.) Validated on the chokepoint flagship —
   the anchored version read cleaner and more cohesive than free-form prompting, so this is the
   default for this site and other projects.
-- **Canvas:** concept icons `32×32` native (export larger only if detail demands, in 16px steps).
-  Cartridge stickers `32×24` (fills the wider label window). Boot mark `96×64`.
+- **Canvas:** section-nav concept icons `64×64` native (read at ~22px beside a link, scale up for
+  blog lead-ins). Older concept art is `128×128`. Cartridge stickers `32×24` (fills the wider label
+  window). Boot mark `96×64`.
 - **Palette:** pull from `assets/css/tokens.css`. Max **3–4 colors per icon** + transparent bg.
   Base ink `--gbc-lcd #8ab43a` / bright `--gbc-lcd-bright #b6df5a` on transparent; use one accent
   from the Metal Slug set (`--neon-yellow #ffd23a`, `--neon-pink #e8352a`, `--neon-cyan #ff8c1a`)
@@ -62,13 +64,16 @@ color-only fallback still works if a path is removed.
 
 Reusable lead-in art for posts (`{% include post-pixel-art.html %}`). Grounded in the operator's
 domain (invariant-anchored detection, AiTM, IOK rules, OSINT→JSON→detection pipeline). The
-**chokepoint funnel is the flagship mark** — it ties to the Detection Chokepoints project and is
-the most "ownable" image.
+**chokepoint bear trap is the flagship mark** — it ties to the Detection Chokepoints project and is
+the most "ownable" image. The first four below are the detection-chokepoints **section-nav set**
+(64×64): chokepoint, attack-chain, trends, framework.
 
 | concept | file | one-line visual brief |
 |---------|------|------------------------|
-| chokepoint ★ | `chokepoint.png` | Many arrows from the top converge through one narrow gate/funnel to a single point. The flagship. |
-| attack-chain | `attack-chain.png` | 3–4 linked chain segments left→right; the middle link is the bright accent (the one you break). |
+| chokepoint ★ | `chokepoint.png` | **A bear trap** — jaws + teeth, glowing yellow bait. The chokepoint as the trap you lure and catch the enemy in (the unavoidable step). Section-nav; flagship. |
+| attack-chain | `attack-chain.png` | **A ball-and-chain chomp**, side profile, mouth open mid-bite, straining to break its chain. Section-nav. |
+| trends | `trends.png` | **A cresting wave** with yellow foam — the rising tide of what's accelerating. Section-nav. |
+| framework | `framework.png` | **A blueprint scroll** with a schematic — the methodology that ties it together. Section-nav. |
 | invariant / anchor | `invariant.png` | A heavy anchor or keystone — "the step the attacker can't avoid." Solid, immovable. |
 | telemetry | `telemetry.png` | A stacked log/ledger emitting 3 ascending signal blips, or a small radar sweep. |
 | ioc-vs-behavior | `ioc-behavior.png` | Split: a fingerprint (IOC, dim) vs a footprint/motion trail (behavior, bright). Behavior wins. |
@@ -80,6 +85,14 @@ the most "ownable" image.
 
 ★ = flagship. Optional later: `deception` (honeypot), `mitre-technique` (ATT&CK matrix cell),
 `lolbin` (a trusted binary with a small horn).
+
+**PixelLab generation notes (learned building the section set):** use `create_1_direction_object`
+at `size: 64` (yields a 16-candidate review pack). Use **`view: sidescroller`** for clean
+transparent output — `view: top-down` adds an opaque light-grey background box that must be keyed
+out afterward (see `pwp-audit/process-trap.js`: key bright low-saturation pixels to transparent,
+then keep only the largest connected blob to drop stray specks). Prompt for a **single subject**
+("one creature only, no duplicates") — multi-candidate packs sometimes render two. Anchor every
+prompt to the house style above so the set stays one family.
 
 ### Usage pattern (CLAUDE.md flow)
 concept pixel art → short explanation → real screenshot/evidence → caption on what to notice.

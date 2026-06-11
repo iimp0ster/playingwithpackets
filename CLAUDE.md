@@ -13,10 +13,12 @@ each time. Verify specifics against the repo only when something here looks stal
 - Plugins: jekyll-feed, jekyll-seo-tag, jekyll-sitemap.
 
 ## Theme — core concept
-Retro arcade. Homepage is an interactive arcade boot → weapon-select hub. Two device shells,
-hard breakpoint at **720px**:
-- below 720px → **Game Boy shell** (mobile)  → `_includes/gameboy-shell.html`
-- above 720px → **Metal Slug arcade cabinet** (desktop) → `_includes/arcade-shell.html`
+Retro arcade. Homepage is an interactive arcade boot → weapon-select hub. **One shell at every
+breakpoint: the Game Boy** (`_includes/gameboy-shell.html`). On desktop (≥720px) the same shell
+scales up and centers; below 720px it fills the viewport. The boot screen is the Game Boy LCD; the
+weapon-select menu is a shared full-page stage. (A Metal Slug arcade cabinet was prototyped but
+retired per user direction — the Game Boy is the single house shell; the old cabinet lives only in
+`design/arcade-backup/` as reference, not in the live build.)
 The arcade is a NAVIGATION LAYER over real pages, not a JS-only SPA. Every post/section is a
 real static URL, readable without JS. `_includes/nav-fallback.html` is the no-JS path. Keep
 real URLs, SEO, RSS, accessibility intact.
@@ -27,7 +29,7 @@ real URLs, SEO, RSS, accessibility intact.
 - `_config.yml` — config (permalink, plugins, `archive` collection, post/archive defaults)
 - `_layouts/` — `default.html`, `arcade.html`, `section.html`, `post.html`, `archive.html`
   (note: there is NO project layout — sections cover projects)
-- `_includes/` — `head.html`, `arcade-shell.html`, `gameboy-shell.html`,
+- `_includes/` — `head.html`, `gameboy-shell.html`,
   `screen-template.html`, `nav-fallback.html`, `post-pixel-art.html`, `post-screenshot.html`
 - `_data/sections.yml` — SOURCE OF TRUTH for the arcade sections/weapons (3 live for launch).
   Edits to sections happen HERE, not in JS.

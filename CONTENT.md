@@ -95,14 +95,22 @@ Use the screenshot include for evidence:
 
 ## Concept icon library
 
-Original detection-engineering pixel icons (PixelLab), 128×128 PNG, in `assets/img/pixel/concepts/`.
-Use as post lead-ins via `post-pixel-art.html`. Flagship: chokepoint. Keep the set cohesive — same
-style when adding new ones.
+Original detection-engineering pixel icons (PixelLab), in `assets/img/pixel/concepts/`. Use as post
+lead-ins via `post-pixel-art.html`. Flagship: chokepoint. House style: bold solid black outline,
+two-step cel shading, Game Boy-green palette (`#8ab43a`/`#b6df5a`) + a single yellow (`#ffd23a`)
+accent on the "key" element, chunky pixels, transparent bg. Keep the set cohesive when adding new ones.
+
+The first four (chokepoint, attack-chain, trends, framework) are the **Detection Chokepoints site
+section-nav set** — 64×64, built to read beside a nav link at ~22px; they double as blog lead-ins.
+The same PNGs are copied into the `detection-chokepoints` repo for the section links. The rest are
+128×128 blog concept art.
 
 | Icon | File | Use for |
 |------|------|---------|
-| Chokepoint ★ | `chokepoint.png` | Invariant-anchored detection; variants converging to one step |
-| Attack chain | `attack-chain.png` | Kill-chain stages; where actors converge |
+| Chokepoint ★ | `chokepoint.png` | Section nav + invariant-anchored detection — a **bear trap**: the unavoidable step where you lure and catch them |
+| Attack chain | `attack-chain.png` | Section nav + kill-chain convergence — a **ball-and-chain chomp** straining to break its link |
+| Trends | `trends.png` | Section nav + what's accelerating in the landscape — a **cresting wave** (rising tide) |
+| Framework | `framework.png` | Section nav + the methodology that ties it together — a **blueprint scroll** |
 | Invariant / anchor | `invariant.png` | The unavoidable step a technique depends on |
 | Telemetry | `telemetry.png` | Log sources / data-source coverage |
 | IOC vs behavior | `ioc-behavior.png` | Indicators vs behavioral detection |
@@ -111,3 +119,15 @@ style when adding new ones.
 | Coverage gap | `coverage-gap.png` | Detection gaps / missing coverage |
 | Sigma rule | `sigma-rule.png` | Sigma / detection-as-code |
 | Intel pipeline | `intel-pipeline.png` | OSINT → structured intel → detection |
+
+### Rule tier badges
+
+Maturity-tier badges for the Sigma/detection rules, in `assets/img/pixel/tiers/` (64×64, same house
+style). Used as the per-stage rule badges on the detection-chokepoints site and in the maturity table
+in posts.
+
+| Tier | File | Meaning |
+|------|------|---------|
+| Research | `research.png` | **Beaker** — broad baseline, high noise, experimental; establish visibility, not for alerting |
+| Hunt | `hunt.png` | **Bow & arrow** — behavioral context, moderate noise; periodic sweeps + analyst triage |
+| Analyst | `analyst.png` | **Siren** — production-ready, low noise; the alert that pages someone |

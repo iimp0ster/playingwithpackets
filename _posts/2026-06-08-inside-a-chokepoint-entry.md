@@ -13,6 +13,8 @@ of them. I'll walk the
 [ClickFix entry](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/)
 top to bottom and, for each section, say what it holds and how to actually use it.
 
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/clickfix-entry.png" alt="The ClickFix entry on Detection Chokepoints, showing the title, the one-line invariant, and the priority, ATT&CK, difficulty, and prevalence badges" caption="The ClickFix entry. Every chokepoint follows this layout: the invariant and at-a-glance badges up top, then the sections below." %}
+
 ## The hero: the invariant and the at-a-glance read
 
 The top of every entry leads with the [invariant](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#overview),
@@ -58,6 +60,14 @@ section tracks nine variants: the original ClickFix, FileFix, TerminalFix, Downl
 JackFix/GlitchFix/ConsentFix family, WebDAV ClickFix, InstallFix, a Windows Terminal version, and a
 DNS-based one. Each shows the lure the user sees, a defanged copy of the payload, and a one-line mapping
 back to the same chokepoint.
+
+Expand any variant and the entry embeds a live preview of the lure itself. A few of the distinct ones:
+
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-captcha.png" alt="Simulated fake Cloudflare CAPTCHA page instructing the user to press Win+R, paste, and hit Enter" caption="Simulated lure (defanged recreation): the classic fake Cloudflare CAPTCHA. The steps walk the victim through Win+R, Ctrl+V, Enter." %}
+
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-terminalfix.png" alt="Simulated fake human-verification page instructing the user to open PowerShell or Terminal as admin" caption="Simulated lure: the TerminalFix pretext steers the victim to open PowerShell/Terminal instead of the Run dialog." %}
+
+{% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/lure-installfix.png" alt="Simulated clone of the Claude Code install docs page with a malicious install command" caption="Simulated lure: InstallFix clones a real tool's install page (here, Claude Code) and swaps the install one-liner for a malicious mshta call." %}
 
 **How to use it:** this section does two jobs. First it's evidence: every lure since 2024 still funnels
 through clipboard seeding, interpreter execution, and a network callback. The constant held. Second, and

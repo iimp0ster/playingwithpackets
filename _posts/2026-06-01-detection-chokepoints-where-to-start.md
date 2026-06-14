@@ -128,6 +128,5 @@ begin, start with what the attacker can't avoid. Pick a chokepoint, deploy the R
 watch it for a week to learn your noise, and climb the tiers from there. When the tool rotates
 next month, your detection is still sitting on the part that can't change.
 
-It's all open on GitHub, please contribue! If you've reverse-engineered a technique down to its invariant, or you
-spot one I've gotten wrong, I'd love to showcase your research:
+If you've reverse-engineered a technique down to its invariant, please contribute!
 [**Detection Chokepoints**](https://iimp0ster.github.io/detection-chokepoints/).

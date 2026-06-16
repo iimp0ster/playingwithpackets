@@ -107,14 +107,14 @@ control names exactly what it interrupts in the chain.
 preventive ask to your endpoint team. Spawn control, for instance, breaks ClickFix at interpreter
 execution even when the user does paste and hit Enter.
 
-## Raw Log Samples: what the telemetry actually looks like
+## Raw Log Samples: what the telemetry looks like
 
 [Raw Log Samples](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/#raw-logs)
 shows the real events the chain produces: Sysmon EID 1 (`powershell.exe` spawned by `chrome.exe` with an
 `-EncodedCommand`), EID 22 (the DNS query from the interpreter), and EID 3 (the outbound connection to a
 non-RFC1918 IP), all with full fields.
 
-**How to use it:** know the exact event shape before you go looking. Confirm your pipeline is actually
+**How to use it:** know the exact event shape before you go looking. Confirm your pipeline is
 capturing `ParentImage`, `CommandLine`, `DestinationIp`, and the rest; tune your field extractions
 against these samples; and keep them as the "what good looks like" reference when you validate a rule.
 
@@ -156,5 +156,5 @@ test them, prevention to shift left. Every chokepoint in the project is built th
 a good one to learn on. Pick the stage your telemetry already covers, deploy the Research-tier rule,
 watch it fire in your environment, and climb from there.
 
-Browse it for yourself:
+Take it for a test drive:
 [**the ClickFix entry**](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/).

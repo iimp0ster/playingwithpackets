@@ -285,6 +285,7 @@ body.page {
     var(--gbc-page-panel-hi);
   border-bottom:2px solid var(--gbc-page-border);
 }
+.post-screenshot-frame a { display:block; cursor:zoom-in; }
 .post-screenshot-frame img {
   width:100%; height:auto; display:block;
   border:2px solid var(--gbc-page-border);

@@ -9,6 +9,18 @@ excerpt: "A section-by-section read of the ransomware attack chain: the overlap 
 
 As you dig into investigations over time, you'll start to notice that some threats start to blur together. The names change and the tooling changes, but the general attack path remains. For example, after observing TTPs of different ransomware operators, you'll start seeing the one shape they all move through.
 
+## TL;DR for busy defenders
+
+- The five ransomware operators on the page use different tools, but all five converge on command
+  and scripting interpreters (T1059), inhibit system recovery (T1490), and data encrypted for
+  impact (T1486).
+- Treat that overlap as a priority signal. The more unrelated actors depend on the same technique,
+  the more detection coverage placed there can do for you.
+- Write against the chokepoint row at the bottom of the matrix, not one actor's tool inside a cell.
+  Track new tools as variations unless they change the prerequisite itself.
+- Follow the related chains upstream. Infostealer or AiTM activity can be the warning for the
+  ransomware or identity-domination chain that consumes the stolen access next.
+
 ## Different actors, same boxes
 
 In my [first post](/blog/detection-chokepoints-where-to-start/) I discussed the concept of pinning detections to invariants instead of things an attacker can control; in the [second post](/blog/inside-a-chokepoint-entry/) I went through my ClickFix chokepoint and explained how a defender could leverage it. This post zooms out to a whole kill chain, focusing on five ransomware actors, and the page that lines them up.

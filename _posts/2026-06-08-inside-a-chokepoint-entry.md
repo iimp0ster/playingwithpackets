@@ -13,6 +13,17 @@ of them. I'll walk the
 [ClickFix entry](https://iimp0ster.github.io/detection-chokepoints/chokepoints/clickfix-techniques/)
 top to bottom and, for each section, say what it holds and how to actually use it.
 
+## TL;DR for busy defenders
+
+- Read the invariant first. For ClickFix, the chain is clipboard write → user pastes into an
+  interpreter → outbound connection. The rest of the entry explains how to observe each stage.
+- Pick the stage your telemetry can support instead of betting everything on one event. Clipboard
+  ETW may be out of reach, while Sysmon process creation and network events are already available.
+- Use the Variations section to find where a rule's scope changes. Windows Terminal adds `wt.exe`
+  as a parent, while DNS-based delivery replaces the expected HTTP callback with `nslookup`.
+- Deploy the Research tier first, tune toward Hunt and Analyst, then validate the result with the
+  emulation script. Pair the detection with a preventive control that breaks the same stage.
+
 {% include post-screenshot.html src="/assets/img/posts/inside-a-chokepoint-entry/clickfix-entry.png" alt="The ClickFix entry on Detection Chokepoints, showing the title, the one-line invariant, and the priority, ATT&CK, difficulty, and prevalence badges" caption="The ClickFix entry. Every chokepoint follows this layout: the invariant and at-a-glance badges up top, then the sections below." %}
 
 ## The hero: the invariant and the at-a-glance read

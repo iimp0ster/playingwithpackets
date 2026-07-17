@@ -13,6 +13,17 @@ those detections are pinned to (a file name, a hash, specific tool artifacts etc
 fully controls. They can recompile, rename, or swap the whole framework to evade detection. Pin your rule
 to `mimikatz.exe` and you've signed up to lose the moment someone changes a filename.
 
+## TL;DR for busy defenders
+
+- Pin detections to the action a threat actor has to perform, not the filename, hash, or tool they
+  control. Credential dumping still has to reach credential material even when Mimikatz disappears.
+- Start with the Research-tier rule to learn what normal looks like in your environment. Refine it
+  into a Hunt rule, then promote it to an Analyst alert once the false positives are understood.
+- Use Attack Chains to find where unrelated threats converge. Use Trends to see which variations
+  around those fixed points need tuning.
+- ClickFix is the working example: clipboard write → user execution → network activity. Cover more
+  than one stage, pair the detection with prevention, and watch it fire in a lab before shipping it.
+
 {% include post-screenshot.html src="/assets/img/posts/detection-chokepoints-where-to-start/de_life.png" alt="A wall of recent security headlines: new ransomware variants, EDR bypasses, infostealers, and ClickFix surges" caption="A normal week of headlines. This is the job: a new variant, a fresh bypass, another stealer, every single day. You can't ship a detection per headline; chokepoints are how you stop trying to." %}
 
 A better way to think about it is to flip the question. Instead of asking what the attacker is

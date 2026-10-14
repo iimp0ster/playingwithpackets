@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">One DLL load, two ways to normalize it</title>
+  <desc id="desc">A trusted executable loads an adjacent DLL. Elastic compares the DLL name with a Windows library inventory. The proposed adaptation compares the executable and DLL pair with a relationship catalog.</desc>
+  <defs>
+    <style>
+      .bg{fill:#0b1208}.panel{fill:#111a0e;stroke:#456b2a;stroke-width:3}.box{fill:#182414;stroke:#6f9142;stroke-width:3}.dll{fill:#2a1812;stroke:#ff9d3d;stroke-width:3}.result{fill:#1b2b14;stroke:#b6df5a;stroke-width:3}.title{font:700 32px 'Courier New',monospace;fill:#f4e8d0}.heading{font:700 27px 'Courier New',monospace;fill:#f4e8d0}.body{font:21px 'Courier New',monospace;fill:#f4e8d0}.note{font:18px 'Courier New',monospace;fill:#c8b598}.green{fill:#b6df5a}.orange{fill:#ff9d3d}.line-green{stroke:#b6df5a;stroke-width:4;fill:none}.line-orange{stroke:#ff9d3d;stroke-width:4;fill:none}.arrowhead-green{fill:#b6df5a}.arrowhead-orange{fill:#ff9d3d}.center{text-anchor:middle}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="620"/>
+  <text x="60" y="54" class="title">ONE DLL LOAD, TWO NORMALIZERS</text>
+  <text x="60" y="84" class="note">The loader event stays the same. The catalog changes the question.</text>
+
+  <rect x="75" y="118" width="290" height="92" rx="10" class="box"/>
+  <text x="220" y="158" class="heading green center">vb7to8.exe</text>
+  <text x="220" y="188" class="note center">trusted executable</text>
+
+  <path d="M365 164 H425" class="line-green"/>
+  <path d="M425 156 L441 164 L425 172 Z" class="arrowhead-green"/>
+  <rect x="465" y="118" width="270" height="92" rx="10" class="box"/>
+  <text x="600" y="158" class="heading center">PE loader</text>
+  <text x="600" y="188" class="note center">maps requested DLL</text>
+
+  <path d="M735 164 H795" class="line-orange"/>
+  <path d="M795 156 L811 164 L795 172 Z" class="arrowhead-orange"/>
+  <rect x="835" y="118" width="290" height="92" rx="10" class="dll"/>
+  <text x="980" y="158" class="heading orange center">mscoree.dll</text>
+  <text x="980" y="188" class="note center">adjacent DLL copy</text>
+
+  <rect x="60" y="258" width="520" height="305" rx="12" class="panel"/>
+  <text x="92" y="304" class="heading green">ELASTIC</text>
+  <text x="92" y="337" class="body">Is this a Windows DLL name?</text>
+  <rect x="92" y="371" width="196" height="62" rx="8" class="box"/>
+  <text x="190" y="410" class="body center">mscoree.dll</text>
+  <path d="M288 402 H307" class="line-green"/>
+  <path d="M307 394 L323 402 L307 410 Z" class="arrowhead-green"/>
+  <rect x="350" y="371" width="198" height="62" rx="8" class="box"/>
+  <text x="449" y="397" class="note center">Windows DLL</text>
+  <text x="449" y="421" class="note center">inventory</text>
+  <rect x="92" y="469" width="456" height="64" rx="8" class="result"/>
+  <text x="320" y="509" class="body green center">DLL Hijack: Masquerading</text>
+
+  <rect x="620" y="258" width="520" height="305" rx="12" class="panel"/>
+  <text x="652" y="304" class="heading orange">HIJACKLIBS ADAPTATION</text>
+  <text x="652" y="337" class="body">Is this a known host/DLL pair?</text>
+  <rect x="652" y="371" width="222" height="62" rx="8" class="box"/>
+  <text x="763" y="397" class="note center">vb7to8.exe</text>
+  <text x="763" y="421" class="note center">+ mscoree.dll</text>
+  <path d="M874 402 H893" class="line-orange"/>
+  <path d="M893 394 L909 402 L893 410 Z" class="arrowhead-orange"/>
+  <rect x="936" y="371" width="172" height="62" rx="8" class="box"/>
+  <text x="1022" y="397" class="note center">relationship</text>
+  <text x="1022" y="421" class="note center">catalog</text>
+  <rect x="652" y="469" width="456" height="64" rx="8" class="result"/>
+  <text x="880" y="509" class="body green center">Known pair candidate</text>
+
+  <text x="60" y="600" class="note">Both classifiers enrich the module-load event before the backend rule evaluates it.</text>
+</svg>

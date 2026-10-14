@@ -256,6 +256,63 @@ body.page {
   border-radius:0 3px 3px 0;
 }
 .page-content pre code { background:none; padding:0; }
+
+/* Rouge syntax blocks. Keep inline code quiet and give fenced code a clear frame. */
+.page-content div.highlighter-rouge {
+  position:relative; margin:20px 0;
+  background:#0c1209; border:1px solid #35551e; border-radius:5px;
+  box-shadow:inset 0 0 0 1px rgba(182,223,90,.05);
+}
+.page-content div.highlighter-rouge::before {
+  content:"CODE"; position:absolute; top:0; right:0; z-index:1;
+  padding:5px 9px; border-left:1px solid #35551e; border-bottom:1px solid #35551e;
+  color:#8fa66d; background:#111a0e; font:700 .65rem/1 var(--font-mono);
+  letter-spacing:.1em; border-radius:0 4px 0 4px;
+}
+.page-content div.language-go.highlighter-rouge::before { content:"GO"; color:#7dcfff; }
+.page-content div.language-eql.highlighter-rouge::before,
+.page-content div.language-sql.highlighter-rouge::before { content:"EQL"; color:#ffd23a; }
+.page-content div.language-json.highlighter-rouge::before { content:"JSON"; color:#ff9d3d; }
+.page-content div.language-yaml.highlighter-rouge::before { content:"YAML"; color:#d9a6ff; }
+.page-content div.language-text.highlighter-rouge::before { content:"LOGIC"; }
+.page-content div.language-text.highlighter-rouge pre {
+  white-space:pre-wrap; overflow-wrap:anywhere;
+}
+.page-content div.highlighter-rouge .highlight { background:transparent; }
+.page-content div.highlighter-rouge pre {
+  margin:0; padding:40px 18px 18px; border:0; border-radius:5px;
+  background:transparent; color:#f4e8d0; font-size:.82rem; line-height:1.6;
+  tab-size:4; user-select:text;
+}
+.page-content .highlight .c,
+.page-content .highlight .c1,
+.page-content .highlight .cm,
+.page-content .highlight .cp,
+.page-content .highlight .cs { color:#8f9b7e; font-style:italic; }
+.page-content .highlight .k,
+.page-content .highlight .kc,
+.page-content .highlight .kd,
+.page-content .highlight .kn,
+.page-content .highlight .kp,
+.page-content .highlight .kr { color:#ffd23a; font-weight:700; }
+.page-content .highlight .kt,
+.page-content .highlight .nc { color:#7dcfff; font-weight:700; }
+.page-content .highlight .nf,
+.page-content .highlight .nb { color:#ffb85c; }
+.page-content .highlight .s,
+.page-content .highlight .s1,
+.page-content .highlight .s2,
+.page-content .highlight .se,
+.page-content .highlight .sh { color:#b6df5a; }
+.page-content .highlight .m,
+.page-content .highlight .mi,
+.page-content .highlight .mf,
+.page-content .highlight .mh { color:#ff9d3d; }
+.page-content .highlight .na,
+.page-content .highlight .nl,
+.page-content .highlight .nv { color:#d9a6ff; }
+.page-content .highlight .o { color:#ff8c1a; }
+.page-content .highlight .p { color:#c8b598; }
 .page-content ul, .page-content ol { margin:0 0 16px 24px; }
 .page-content li { margin-bottom:6px; }
 .page-content blockquote {

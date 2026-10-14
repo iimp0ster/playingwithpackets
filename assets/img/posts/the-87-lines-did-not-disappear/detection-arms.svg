@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Known-pair and unknown-pair DLL side-loading coverage</title>
+  <desc id="desc">Every branch begins with a process loading a DLL. A catalog-backed branch recognizes documented relationships. A broader behavior branch looks for suspicious relationships that are not yet cataloged.</desc>
+  <defs>
+    <style>
+      .bg{fill:#0b1208}.core{fill:#182414;stroke:#b6df5a;stroke-width:4}.known{fill:#142219;stroke:#78a342;stroke-width:3}.unknown{fill:#281b12;stroke:#ff9d3d;stroke-width:3}.chip{fill:#0b1208;stroke:#547532;stroke-width:2}.title{font:700 32px 'Courier New',monospace;fill:#f4e8d0}.heading{font:700 27px 'Courier New',monospace;fill:#f4e8d0}.body{font:21px 'Courier New',monospace;fill:#f4e8d0}.note{font:18px 'Courier New',monospace;fill:#c8b598}.chiptext{font:15px 'Courier New',monospace;fill:#c8b598}.green{fill:#b6df5a}.orange{fill:#ff9d3d}.line{stroke:#b6df5a;stroke-width:4;fill:none}.arrowhead{fill:#b6df5a}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="560"/>
+  <text x="60" y="54" class="title">ONE OBSERVATION, TWO COVERAGE PATHS</text>
+  <text x="60" y="84" class="note">A process mapped a DLL. What do we know about that relationship?</text>
+
+  <rect x="380" y="116" width="440" height="90" rx="12" class="core"/>
+  <text x="456" y="155" class="heading green">PROCESS LOADS DLL</text>
+  <text x="478" y="185" class="body">process X mapped DLL Y</text>
+
+  <path d="M500 206 C500 245 320 235 320 264" class="line"/>
+  <path d="M700 206 C700 245 880 235 880 264" class="line"/>
+  <path d="M312 264 H328 L320 278 Z" class="arrowhead"/>
+  <path d="M872 264 H888 L880 278 Z" class="arrowhead"/>
+
+  <rect x="60" y="278" width="520" height="230" rx="12" class="known"/>
+  <text x="92" y="323" class="heading green">KNOWN PAIR</text>
+  <text x="92" y="354" class="body">Catalog-backed classification</text>
+  <rect x="92" y="384" width="205" height="48" rx="7" class="chip"/>
+  <text x="118" y="415" class="chiptext">host + DLL match</text>
+  <rect x="317" y="384" width="231" height="48" rx="7" class="chip"/>
+  <text x="342" y="415" class="chiptext">expected load method</text>
+  <text x="92" y="468" class="note green">Precise, but limited to cataloged pairs.</text>
+
+  <rect x="620" y="278" width="520" height="230" rx="12" class="unknown"/>
+  <text x="652" y="323" class="heading orange">UNKNOWN PAIR</text>
+  <text x="652" y="354" class="body">Behavior-based hunt</text>
+  <rect x="652" y="384" width="215" height="48" rx="7" class="chip"/>
+  <text x="665" y="415" class="chiptext">relocated trusted host</text>
+  <rect x="887" y="384" width="221" height="48" rx="7" class="chip"/>
+  <text x="901" y="415" class="chiptext">unexpected local DLL</text>
+  <text x="652" y="468" class="note orange">Broader, and able to find new pairs.</text>
+
+  <text x="60" y="542" class="note">The catalog improves precision. The behavior hunt preserves coverage when the pair is new.</text>
+</svg>

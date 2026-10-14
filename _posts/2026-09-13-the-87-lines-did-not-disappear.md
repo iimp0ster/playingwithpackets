@@ -16,6 +16,18 @@ library where host.os.type == "windows" and event.action == "load" and
   dll.Ext.defense_evasions : "DLL Hijack: Masquerading"
 ```
 
+## TL;DR for busy defenders
+
+- Elastic moved a 2,600-name DLL list out of the rule and into the endpoint sensor. The rule now
+  consumes one `DLL Hijack: Masquerading` classification instead of rebuilding the lookup in every
+  query.
+- The same pattern can normalize trusted executable and DLL relationships from HijackLibs and
+  source-backed chokepoint records. Classify the pair once, then let hunts consume the result.
+- A catalog match is not proof of side-loading. Pair it with the documented loading relationship
+  and suspicious runtime context before giving it a stronger candidate label.
+- Keep a second detection arm for unknown pairs: trusted executables running from unusual
+  directories and loading adjacent, newly created, or unexpected DLLs.
+
 ## Where the 87 lines went
 
 Now, the Elastic Defend sensor maintains a cached inventory of Windows and system-library DLL names. When a process

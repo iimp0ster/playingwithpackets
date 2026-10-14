@@ -8,7 +8,7 @@ excerpt: "Elastic moved DLL identity logic to the endpoint and replaced thousand
 ---
 
 Elastic Security Labs recently published a DLL search-order hijacking detection that caught my
-attention since they're discussing a dll sideloading chokepoint of their own. Their old rule was about 88 lines long. It carried roughly 2,600 DLL names along with path,
+attention since they're discussing a DLL side-loading chokepoint of their own. Their old rule was about 88 lines long. It carried roughly 2,600 DLL names along with path,
 signature, and file-age conditions. Now, in Elastic Defend 9.5.0, the query is reduced to one line:
 
 ```sql
@@ -22,11 +22,11 @@ Now, the Elastic Defend sensor maintains a cached inventory of Windows and syste
 loads a DLL that is not Microsoft-signed and its name appears in that inventory, the sensor can add
 the `DLL Hijack: Masquerading` value to the event.
 
-The sensor has normalized dll search order hijacking into:
+The sensor has normalized DLL search-order hijacking into:
 
 > Did this process load a non-Microsoft DLL that is using the name of a Windows library?
 
-Now the Elastic sensor consumes the classification
+The Elastic rule consumes the classification
 and decides what to do with it. Recent creation, prevalence, product allowlists, and alert policy can
 still live downstream in a rule that's a lot easier to maintain over time.
 
@@ -53,7 +53,7 @@ Windows maps the adjacent file into the trusted process. The chain later hollows
 
 The specific pair matters during an investigation, but the export table is more interesting for
 detection design. Elastic counted 231 exports matching functions found across common Windows DLLs.
-Normalzing or doing a meta analysis of commonly imported functions from malware could be another chokepoint as well since you only care about what the malware is trying to import from a benign .dll binary.
+Normalizing or doing a meta-analysis of commonly imported functions from malware could be another chokepoint as well. You only care about what the malware is trying to import from a benign DLL.
 That suggests the same loader could be renamed and packaged beside other vulnerable executables.
 
 A rule for `vb7to8.exe` plus `mscoree.dll` catches one implementation.
@@ -153,7 +153,7 @@ That leaves two detection arms:
 {% include post-screenshot.html src="/assets/img/posts/the-87-lines-did-not-disappear/detection-arms.svg" alt="The host-to-module load chokepoint branching into a catalog-backed analytic for known HijackLibs pairs and a catalog-independent analytic for relocated trusted hosts loading unusual adjacent DLLs" caption="The catalog produces the precise branch. The broader relationship hunt keeps coverage when the attacker chooses an undocumented pair." %}
 
 The two arms share the same observation: process X mapped module Y. The difference is how much prior
-knowledge the classifier has about that relationship. For unknown pairs, this is a great place to start a hunting hypothesis for benign applications that can be abused for dll sideloading.
+knowledge the classifier has about that relationship. For unknown pairs, this is a great place to start a hunting hypothesis for benign applications that can be abused for DLL side-loading.
 
 ## Sources
 

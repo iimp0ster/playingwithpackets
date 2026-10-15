@@ -129,7 +129,7 @@ The catalog and classifier perform the lookup once instead of making every rule 
 
 ## How the chokepoint page can contribute
 
-My [Trusted Binary DLL Side-Loading draft](https://github.com/iimp0ster/detection-chokepoints/blob/iimp0ster/trusted-binary-dll-sideloading/chokepoints/defense-evasion/trusted-binary-dll-sideloading.yml)
+My [Trusted Binary DLL Side-Loading chokepoint](https://github.com/iimp0ster/detection-chokepoints/blob/iimp0ster/trusted-binary-dll-sideloading/chokepoints/defense-evasion/trusted-binary-dll-sideloading.yml)
 already records several source-backed relationships:
 
 - `fltMC.exe` loading `FLTLIB.dll` in a JFMBackdoor chain
